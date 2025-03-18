@@ -1,4 +1,3 @@
-# models.py
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -11,6 +10,15 @@ class RTP(db.Model):
     status = db.Column(db.String(20), default="creado")
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "iban": self.iban,
+            "amount": self.amount,
+            "status": self.status,
+            "timestamp": self.timestamp.isoformat()
+        }
+
 class Log(db.Model):
     __tablename__ = 'log'
     id = db.Column(db.Integer, primary_key=True)
@@ -19,3 +27,13 @@ class Log(db.Model):
     new_status = db.Column(db.String(20))
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
     hash_value = db.Column(db.String(64))
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "rtp_id": self.rtp_id,
+            "old_status": self.old_status,
+            "new_status": self.new_status,
+            "timestamp": self.timestamp.isoformat(),
+            "hash_value": self.hash_value
+        }
