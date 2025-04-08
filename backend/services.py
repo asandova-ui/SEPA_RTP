@@ -2,12 +2,18 @@ from models import db, RTP
 from utils import cambiar_estado_rtp, rechazar_rtp, validar_iban
 from datetime import datetime, timedelta
 
-def crear_rtp_service(data):
+def crear_rtp_service(data, benef_id, psp_benef_id, psp_payer_id, payer_id):
     iban = data.get('iban')
     amount = data.get('amount')
-    if not iban or not amount:
-        return {"error": "Faltan campos requeridos"}
-    nuevo_rtp = RTP(iban=iban, amount=amount)
+
+    nuevo_rtp = RTP(
+        iban=iban,
+        amount=amount,
+        beneficiary_id=benef_id,
+        psp_beneficiary_id=psp_benef_id,
+        psp_payer_id=psp_payer_id,
+        payer_id=payer_id
+    )
     db.session.add(nuevo_rtp)
     db.session.commit()
     return {"message": "RTP creado", "id": nuevo_rtp.id}
@@ -47,6 +53,7 @@ def validar_payer_service(rtp_id):
     Se pueden aplicar validaciones específicas o chequeos adicionales de fraude.
     """
     rtp_obj = RTP.query.get(rtp_id)
+    #AQUI DEBE IR EL CONTROL DE FRAUDE
     if not rtp_obj:
         return {"error": "RTP no encontrado"}
     

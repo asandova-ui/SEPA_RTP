@@ -9,6 +9,11 @@ class RTP(db.Model):
     amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(20), default="creado")
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+    beneficiary_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
+    psp_beneficiary_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
+    psp_payer_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
+    payer_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
+
 
     def to_dict(self):
         return {
@@ -16,7 +21,11 @@ class RTP(db.Model):
             "iban": self.iban,
             "amount": self.amount,
             "status": self.status,
-            "timestamp": self.timestamp.isoformat()
+            "timestamp": self.timestamp.isoformat(),
+            "beneficiary_id": self.beneficiary_id,
+            "psp_beneficiary_id": self.psp_beneficiary_id,
+            "psp_payer_id": self.psp_payer_id,
+            "payer_id": self.payer_id
         }
 
 class Log(db.Model):

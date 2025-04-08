@@ -16,6 +16,11 @@ rtp_blueprint = Blueprint('rtp', __name__)
 @role_required('beneficiary')
 def crear_rtp():
     data = request.get_json()
+    actor_id = data.get('beneficiary_id')
+    psp_benef_id = data.get('psp_beneficiary_id')
+    psp_payer_id = data.get('psp_payer_id')
+    payer_id = data.get('payer_id')
+    
     result = crear_rtp_service(data)
     status = 201 if "error" not in result else 400
     return jsonify(result), status
