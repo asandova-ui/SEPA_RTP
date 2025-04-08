@@ -1,77 +1,119 @@
-// Variables globales para almacenar actor actual
+// Variables globales
 let currentActorId = null;
 let currentActorRole = null;
 
-/* =========== CREAR ACTOR =========== */
-document.getElementById('createActorForm').addEventListener('submit', function(event) {
-  event.preventDefault();
+/** 
+ * crearActor:
+ * Llama al endpoint /actors con un NOMBRE HARDCODED Y ROL dado por parámetro.
+ * Se usará cuando pulsemos uno de los 4 botones de "Crear Actores".
+ */
+function crearActor(role) {
+  // Podrías pedirle un nombre por prompt(), o generarlo aleatorio, etc.
+  const defaultName = prompt(`Introduzca el nombre del actor para el rol ${role}:`, `${role}_name`);
+  if (!defaultName) {
+    return; // Usuario canceló
+  }
 
-  const actorName = document.getElementById('actorName').value;
-  const actorRole = document.getElementById('actorRole').value;
-
-  const data = { name: actorName, role: actorRole };
+  const data = { 
+    name: defaultName,
+    role: role
+  };
 
   fetch('http://127.0.0.1:5000/actors', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(result => {
-    const actorResponseDiv = document.getElementById('actorResponse');
-    actorResponseDiv.style.display = 'block';
-    actorResponseDiv.innerText = JSON.stringify(result, null, 2);
-
-    if (!result.error) {
-      // Guardar actor_id y role
-      currentActorId = result.id;
-      currentActorRole = result.role;
-      document.getElementById('currentActorId').innerText = currentActorId;
-      document.getElementById('currentActorRole').innerText = currentActorRole;
-
-      // Mostrar la sección correspondiente
-      mostrarSeccionPorRol(currentActorRole);
-    }
+    const msgDiv = document.getElementById('actorCreationResponse');
+    msgDiv.classList.remove('invisible-section');
+    msgDiv.innerHTML = JSON.stringify(result, null, 2);
   })
   .catch(err => {
     console.error(err);
-    const actorResponseDiv = document.getElementById('actorResponse');
-    actorResponseDiv.style.display = 'block';
-    actorResponseDiv.innerText = 'Error al crear actor.';
   });
+}
+
+// Manejar el formulario de "Seleccionar Actor Activo"
+document.getElementById('selectActorForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const actorIdInput = document.getElementById('actorIdSelect');
+  const actorIdValue = parseInt(actorIdInput.value);
+
+  if (!actorIdValue) return;
+
+  // Llamamos a un endpoint para verificar qué rol tiene
+  // Si no existe actor, sale error
+  // Sino, actualizamos currentActorId, currentActorRole
+  fetch(`http://127.0.0.1:5000/actors_info/${actorIdValue}`, {
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(data => {
+    // Si hay error, lo mostramos
+    if (data.error) {
+      document.getElementById('selectActorError').classList.remove('invisible-section');
+      document.getElementById('selectActorError').innerText = data.error;
+      document.getElementById('currentActorCard').classList.add('invisible-section');
+      return;
+    }
+
+    // Sino, asignamos actor actual
+    currentActorId = data.id;
+    currentActorRole = data.role;
+    // Mostramos cartita
+    document.getElementById('selectActorError').classList.add('invisible-section');
+    document.getElementById('currentActorCard').classList.remove('invisible-section');
+    document.getElementById('currentActorId').innerText = data.id;
+    document.getElementById('currentActorRole').innerText = data.role;
+
+    // Mostramos/ocultamos secciones en función del rol
+    mostrarAccionesPorRol(data.role);
+  })
+  .catch(err => console.error(err));
 });
 
-function mostrarSeccionPorRol(role) {
-  // Ocultamos todas las secciones
-  document.getElementById('beneficiaryActions').style.display = 'none';
-  document.getElementById('pspBeneficiaryActions').style.display = 'none';
-  document.getElementById('pspPayerActions').style.display = 'none';
-  document.getElementById('payerActions').style.display = 'none';
+/**
+ * mostrarAccionesPorRol
+ * Oculta todos los paneles de acciones y sólo muestra el que corresponde al rol actual.
+ */
+function mostrarAccionesPorRol(role) {
+  // Ocultar todo
+  document.getElementById('beneficiaryActions').classList.add('invisible-section');
+  document.getElementById('pspBeneficiaryActions').classList.add('invisible-section');
+  document.getElementById('pspPayerActions').classList.add('invisible-section');
+  document.getElementById('payerActions').classList.add('invisible-section');
 
-  // Mostramos la que corresponda al rol
   if (role === 'beneficiary') {
-    document.getElementById('beneficiaryActions').style.display = 'block';
+    document.getElementById('beneficiaryActions').classList.remove('invisible-section');
   } else if (role === 'psp_beneficiary') {
-    document.getElementById('pspBeneficiaryActions').style.display = 'block';
+    document.getElementById('pspBeneficiaryActions').classList.remove('invisible-section');
   } else if (role === 'psp_payer') {
-    document.getElementById('pspPayerActions').style.display = 'block';
+    document.getElementById('pspPayerActions').classList.remove('invisible-section');
   } else if (role === 'payer') {
-    document.getElementById('payerActions').style.display = 'block';
+    document.getElementById('payerActions').classList.remove('invisible-section');
   }
 }
 
-/* =========== BENEFICIARY: Crear RTP =========== */
-document.getElementById('createRTPForm').addEventListener('submit', function(event) {
-  event.preventDefault();
+/**
+ * FORM: Crear RTP (Beneficiary)
+ */
+document.getElementById('createRTPForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  // Leemos campos
+  const iban = document.getElementById('ibanField').value;
+  const amount = parseFloat(document.getElementById('amountField').value);
+  const pspBenef = parseInt(document.getElementById('pspBenefField').value);
+  const pspPayer = parseInt(document.getElementById('pspPayerField').value);
+  const payerId = parseInt(document.getElementById('payerField').value);
 
-  const iban = document.getElementById('iban').value;
-  const amount = parseFloat(document.getElementById('amount').value);
-
-  // Incluimos actor_id en la petición
+  // actor_id es el beneficiary actual
   const data = {
     actor_id: currentActorId,
+    psp_beneficiary_id: pspBenef,
+    psp_payer_id: pspPayer,
+    payer_id: payerId,
     iban: iban,
     amount: amount
   };
@@ -81,111 +123,92 @@ document.getElementById('createRTPForm').addEventListener('submit', function(eve
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(result => {
-    const respDiv = document.getElementById('createRTPResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = JSON.stringify(result, null, 2);
+    const resp = document.getElementById('createRTPResponse');
+    resp.classList.remove('invisible-section');
+    resp.innerText = JSON.stringify(result, null, 2);
   })
-  .catch(err => {
-    console.error(err);
-    const respDiv = document.getElementById('createRTPResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = 'Error al crear RTP.';
-  });
+  .catch(err => console.error(err));
 });
 
-/* =========== PSP BENEFICIARY: Validar RTP =========== */
-document.getElementById('validateBeneficiaryForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
+/**
+ * FORM: PSP Beneficiary -> Validar
+ */
+document.getElementById('validateBeneficiaryForm').addEventListener('submit', function(e) {
+  e.preventDefault();
   const rtpId = document.getElementById('rtpIdValidateBene').value;
 
   const data = {
     actor_id: currentActorId
   };
-
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-beneficiary`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type':'application/json'},
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(result => {
-    const respDiv = document.getElementById('validateBeneficiaryResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = JSON.stringify(result, null, 2);
+    const resp = document.getElementById('validateBeneficiaryResponse');
+    resp.classList.remove('invisible-section');
+    resp.innerText = JSON.stringify(result, null, 2);
   })
-  .catch(err => {
-    console.error(err);
-    const respDiv = document.getElementById('validateBeneficiaryResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = 'Error en validación beneficiary.';
-  });
+  .catch(err => console.error(err));
 });
 
-/* =========== PSP BENEFICIARY: Enrutar RTP =========== */
-document.getElementById('routeForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
+/**
+ * FORM: PSP Beneficiary -> Enrutar
+ */
+document.getElementById('routeForm').addEventListener('submit', function(e) {
+  e.preventDefault();
   const rtpId = document.getElementById('rtpIdRoute').value;
 
   const data = {
     actor_id: currentActorId
   };
-
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/route`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type':'application/json'},
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(result => {
-    const respDiv = document.getElementById('routeResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = JSON.stringify(result, null, 2);
+    const resp = document.getElementById('routeResponse');
+    resp.classList.remove('invisible-section');
+    resp.innerText = JSON.stringify(result, null, 2);
   })
-  .catch(err => {
-    console.error(err);
-    const respDiv = document.getElementById('routeResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = 'Error al enrutar RTP.';
-  });
+  .catch(err => console.error(err));
 });
 
-/* =========== PSP PAYER: Validar RTP =========== */
-document.getElementById('validatePayerForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
+/**
+ * FORM: PSP Payer -> Validar
+ */
+document.getElementById('validatePayerForm').addEventListener('submit', function(e) {
+  e.preventDefault();
   const rtpId = document.getElementById('rtpIdValidatePayer').value;
 
   const data = {
     actor_id: currentActorId
   };
-
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-payer`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type':'application/json'},
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(result => {
-    const respDiv = document.getElementById('validatePayerResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = JSON.stringify(result, null, 2);
+    const resp = document.getElementById('validatePayerResponse');
+    resp.classList.remove('invisible-section');
+    resp.innerText = JSON.stringify(result, null, 2);
   })
-  .catch(err => {
-    console.error(err);
-    const respDiv = document.getElementById('validatePayerResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = 'Error en validación payer.';
-  });
+  .catch(err => console.error(err));
 });
 
-/* =========== PAYER: Decidir (aceptar o rechazar) =========== */
-document.getElementById('decisionForm').addEventListener('submit', function(event) {
-  event.preventDefault();
-
+/**
+ * FORM: Payer -> Decisión
+ */
+document.getElementById('decisionForm').addEventListener('submit', function(e) {
+  e.preventDefault();
   const rtpId = document.getElementById('rtpIdDecision').value;
   const decisionValue = document.getElementById('decision').value;
 
@@ -193,44 +216,48 @@ document.getElementById('decisionForm').addEventListener('submit', function(even
     actor_id: currentActorId,
     decision: decisionValue
   };
-
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/decision`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type':'application/json'},
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
+  .then(res => res.json())
   .then(result => {
-    const respDiv = document.getElementById('decisionResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = JSON.stringify(result, null, 2);
+    const resp = document.getElementById('decisionResponse');
+    resp.classList.remove('invisible-section');
+    resp.innerText = JSON.stringify(result, null, 2);
   })
-  .catch(err => {
-    console.error(err);
-    const respDiv = document.getElementById('decisionResponse');
-    respDiv.style.display = 'block';
-    respDiv.innerText = 'Error en decisión payer.';
-  });
+  .catch(err => console.error(err));
 });
 
-/* =========== MOSTRAR LOGS =========== */
+/**
+ * Botón: Mostrar Logs
+ */
 document.getElementById('showLogs').addEventListener('click', () => {
-  fetch('http://127.0.0.1:5000/logs')
-    .then(response => response.json())
+  fetch(`http://127.0.0.1:5000/logs`)
+    .then(res => res.json())
     .then(logs => {
-      let output = '<ul>';
+      let html = `<ul class="list-group">`;
       logs.forEach(log => {
-        output += `<li>ID Log: ${log.id} | RTP: ${log.rtp_id} | old: ${log.old_status} -> new: ${log.new_status} | ${log.timestamp}</li>`;
+        html += `<li class="list-group-item">
+          <strong>LogID ${log.id} </strong> 
+          [RTP ${log.rtp_id}] 
+          ${log.old_status} => ${log.new_status} 
+          <small>(${log.timestamp})</small>
+          </li>`;
       });
-      output += '</ul>';
-      document.getElementById('logsResponse').innerHTML = output;
+      html += `</ul>`;
+
+      document.getElementById('logsResponse').innerHTML = html;
     })
     .catch(err => console.error(err));
 });
 
-/* =========== Ocultar secciones al cargar la página =========== */
-window.addEventListener('load', () => {
-  // Al iniciar, no tenemos actor seleccionado
-  document.getElementById('currentActorId').innerText = '';
-  document.getElementById('currentActorRole').innerText = '';
-});
+/**
+ * Al arrancar la página, no hace nada especial,
+ * pero podríamos ocultar secciones si fuera necesario.
+ */
+
+// Extra: Endpoint /actors_info/<id> para obtener info de un actor:
+ // Deberás crear en tu backend la ruta GET /actors_info/<int:actor_id>
+ // para que devuelva {id,role,...} o error si no existe.

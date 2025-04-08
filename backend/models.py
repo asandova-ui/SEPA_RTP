@@ -9,11 +9,10 @@ class RTP(db.Model):
     amount = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(20), default="creado")
     timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
-    beneficiary_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
-    psp_beneficiary_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
-    psp_payer_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
-    payer_id = db.Column(db.Integer, db.ForeignKey('actor.id'))
-
+    beneficiary_id = db.Column(db.Integer)
+    psp_beneficiary_id = db.Column(db.Integer)
+    psp_payer_id = db.Column(db.Integer)
+    payer_id = db.Column(db.Integer)
 
     def to_dict(self):
         return {
@@ -50,8 +49,8 @@ class Log(db.Model):
 class Actor(db.Model):
     __tablename__ = 'actor'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)   # Nombre del actor
-    role = db.Column(db.String(20), nullable=False)   # Ej: 'beneficiary', 'psp_beneficiary', 'psp_payer', 'payer'
+    name = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
 
     def to_dict(self):
         return {
