@@ -1,82 +1,236 @@
-document.getElementById('rtpForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    // Obtener valores del formulario
-    const iban = document.getElementById('iban').value;
-    const amount = parseFloat(document.getElementById('amount').value);
+// Variables globales para almacenar actor actual
+let currentActorId = null;
+let currentActorRole = null;
 
-    // Crear el objeto que se enviará
-    const data = { iban, amount };
+/* =========== CREAR ACTOR =========== */
+document.getElementById('createActorForm').addEventListener('submit', function(event) {
+  event.preventDefault();
 
-    // Hacer la petición POST a /rtp
-    fetch('http://127.0.0.1:5000/rtp', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        // Mostrar la respuesta en la página
-        document.getElementById('response').innerText = JSON.stringify(result, null, 2);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('response').innerText = 'Ocurrió un error';
-    });
+  const actorName = document.getElementById('actorName').value;
+  const actorRole = document.getElementById('actorRole').value;
+
+  const data = { name: actorName, role: actorRole };
+
+  fetch('http://127.0.0.1:5000/actors', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const actorResponseDiv = document.getElementById('actorResponse');
+    actorResponseDiv.style.display = 'block';
+    actorResponseDiv.innerText = JSON.stringify(result, null, 2);
+
+    if (!result.error) {
+      // Guardar actor_id y role
+      currentActorId = result.id;
+      currentActorRole = result.role;
+      document.getElementById('currentActorId').innerText = currentActorId;
+      document.getElementById('currentActorRole').innerText = currentActorRole;
+
+      // Mostrar la sección correspondiente
+      mostrarSeccionPorRol(currentActorRole);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    const actorResponseDiv = document.getElementById('actorResponse');
+    actorResponseDiv.style.display = 'block';
+    actorResponseDiv.innerText = 'Error al crear actor.';
+  });
 });
 
-// Validar
-document.getElementById('validateForm').addEventListener('submit', event => {
-    event.preventDefault();
-    const rtpId = document.getElementById('rtpIdValidate').value;
-  
-    fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate`, {
-      method: 'POST'
-    })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('validateResponse').innerText = JSON.stringify(data, null, 2);
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('validateResponse').innerText = 'Error en validación';
-    });
-  });
-  
-  // Actualizar
-  document.getElementById('updateForm').addEventListener('submit', event => {
-    event.preventDefault();
-    const rtpId = document.getElementById('rtpIdUpdate').value;
-    const newStatus = document.getElementById('newStatus').value;
-  
-    fetch(`http://127.0.0.1:5000/rtp/${rtpId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ new_status: newStatus })
-    })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('updateResponse').innerText = JSON.stringify(data, null, 2);
-    })
-    .catch(err => {
-      console.error(err);
-      document.getElementById('updateResponse').innerText = 'Error en actualización';
-    });
-  });
+function mostrarSeccionPorRol(role) {
+  // Ocultamos todas las secciones
+  document.getElementById('beneficiaryActions').style.display = 'none';
+  document.getElementById('pspBeneficiaryActions').style.display = 'none';
+  document.getElementById('pspPayerActions').style.display = 'none';
+  document.getElementById('payerActions').style.display = 'none';
 
-  document.getElementById('showLogs').addEventListener('click', () => {
-    fetch('http://127.0.0.1:5000/logs')
-      .then(response => response.json())
-      .then(logs => {
-        let output = '<ul>';
-        logs.forEach(log => {
-          output += `<li>ID Log: ${log.id} | RTP: ${log.rtp_id} | old: ${log.old_status} -> new: ${log.new_status} | ${log.timestamp}</li>`;
-        });
-        output += '</ul>';
-        document.getElementById('logsResponse').innerHTML = output;
-      })
-      .catch(err => console.error(err));
+  // Mostramos la que corresponda al rol
+  if (role === 'beneficiary') {
+    document.getElementById('beneficiaryActions').style.display = 'block';
+  } else if (role === 'psp_beneficiary') {
+    document.getElementById('pspBeneficiaryActions').style.display = 'block';
+  } else if (role === 'psp_payer') {
+    document.getElementById('pspPayerActions').style.display = 'block';
+  } else if (role === 'payer') {
+    document.getElementById('payerActions').style.display = 'block';
+  }
+}
+
+/* =========== BENEFICIARY: Crear RTP =========== */
+document.getElementById('createRTPForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const iban = document.getElementById('iban').value;
+  const amount = parseFloat(document.getElementById('amount').value);
+
+  // Incluimos actor_id en la petición
+  const data = {
+    actor_id: currentActorId,
+    iban: iban,
+    amount: amount
+  };
+
+  fetch('http://127.0.0.1:5000/rtp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const respDiv = document.getElementById('createRTPResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = JSON.stringify(result, null, 2);
+  })
+  .catch(err => {
+    console.error(err);
+    const respDiv = document.getElementById('createRTPResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = 'Error al crear RTP.';
   });
-  
+});
+
+/* =========== PSP BENEFICIARY: Validar RTP =========== */
+document.getElementById('validateBeneficiaryForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const rtpId = document.getElementById('rtpIdValidateBene').value;
+
+  const data = {
+    actor_id: currentActorId
+  };
+
+  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-beneficiary`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const respDiv = document.getElementById('validateBeneficiaryResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = JSON.stringify(result, null, 2);
+  })
+  .catch(err => {
+    console.error(err);
+    const respDiv = document.getElementById('validateBeneficiaryResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = 'Error en validación beneficiary.';
+  });
+});
+
+/* =========== PSP BENEFICIARY: Enrutar RTP =========== */
+document.getElementById('routeForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const rtpId = document.getElementById('rtpIdRoute').value;
+
+  const data = {
+    actor_id: currentActorId
+  };
+
+  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/route`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const respDiv = document.getElementById('routeResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = JSON.stringify(result, null, 2);
+  })
+  .catch(err => {
+    console.error(err);
+    const respDiv = document.getElementById('routeResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = 'Error al enrutar RTP.';
+  });
+});
+
+/* =========== PSP PAYER: Validar RTP =========== */
+document.getElementById('validatePayerForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const rtpId = document.getElementById('rtpIdValidatePayer').value;
+
+  const data = {
+    actor_id: currentActorId
+  };
+
+  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-payer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const respDiv = document.getElementById('validatePayerResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = JSON.stringify(result, null, 2);
+  })
+  .catch(err => {
+    console.error(err);
+    const respDiv = document.getElementById('validatePayerResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = 'Error en validación payer.';
+  });
+});
+
+/* =========== PAYER: Decidir (aceptar o rechazar) =========== */
+document.getElementById('decisionForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const rtpId = document.getElementById('rtpIdDecision').value;
+  const decisionValue = document.getElementById('decision').value;
+
+  const data = {
+    actor_id: currentActorId,
+    decision: decisionValue
+  };
+
+  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/decision`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(result => {
+    const respDiv = document.getElementById('decisionResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = JSON.stringify(result, null, 2);
+  })
+  .catch(err => {
+    console.error(err);
+    const respDiv = document.getElementById('decisionResponse');
+    respDiv.style.display = 'block';
+    respDiv.innerText = 'Error en decisión payer.';
+  });
+});
+
+/* =========== MOSTRAR LOGS =========== */
+document.getElementById('showLogs').addEventListener('click', () => {
+  fetch('http://127.0.0.1:5000/logs')
+    .then(response => response.json())
+    .then(logs => {
+      let output = '<ul>';
+      logs.forEach(log => {
+        output += `<li>ID Log: ${log.id} | RTP: ${log.rtp_id} | old: ${log.old_status} -> new: ${log.new_status} | ${log.timestamp}</li>`;
+      });
+      output += '</ul>';
+      document.getElementById('logsResponse').innerHTML = output;
+    })
+    .catch(err => console.error(err));
+});
+
+/* =========== Ocultar secciones al cargar la página =========== */
+window.addEventListener('load', () => {
+  // Al iniciar, no tenemos actor seleccionado
+  document.getElementById('currentActorId').innerText = '';
+  document.getElementById('currentActorRole').innerText = '';
+});

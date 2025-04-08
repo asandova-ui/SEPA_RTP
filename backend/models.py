@@ -37,3 +37,16 @@ class Log(db.Model):
             "timestamp": self.timestamp.isoformat(),
             "hash_value": self.hash_value
         }
+
+class Actor(db.Model):
+    __tablename__ = 'actor'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)   # Nombre del actor
+    role = db.Column(db.String(20), nullable=False)   # Ej: 'beneficiary', 'psp_beneficiary', 'psp_payer', 'payer'
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "role": self.role
+        }

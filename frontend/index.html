@@ -1,51 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Prototipo RTP</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="app.js"></script>
+  <meta charset="UTF-8">
+  <title>Prototipo RTP con Roles</title>
+
+  <!-- Incluir Bootstrap para un estilo rápido -->
+  <link 
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+  >
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <h1>Crear RTP</h1>
-    <form id="rtpForm">
-        <label for="iban">IBAN:</label>
-        <input type="text" id="iban" name="iban" required>
-        <br>
-        <label for="amount">Monto:</label>
-        <input type="number" id="amount" name="amount" step="0.01" required>
-        <br>
-        <button type="submit">Enviar RTP</button>
-    </form>
-    <h2>Respuesta del Servidor:</h2>
-    <div id="response"></div>
+<body class="bg-light">
 
-    <h2>Validar RTP</h2>
-    <form id="validateForm">
-        <label for="rtpIdValidate">ID del RTP:</label>
-        <input type="number" id="rtpIdValidate" required>
-        <button type="submit">Validar</button>
-    </form>
-    <div id="validateResponse"></div>
+  <div class="container my-4">
+    <h1 class="text-center">Prototipo RTP con Actores y Roles</h1>
+    <hr>
 
-    <h2>Actualizar RTP</h2>
-    <form id="updateForm">
-        <label for="rtpIdUpdate">ID del RTP:</label>
-        <input type="number" id="rtpIdUpdate" required>
-        <label for="newStatus">Nuevo estado:</label>
-        <select id="newStatus">
-            <option value="aceptado">aceptado</option>
-            <option value="rechazado">rechazado</option>
-            <option value="cancelado">cancelado</option>
-        </select>
-        <button type="submit">Actualizar</button>
-    </form>
-    <div id="updateResponse"></div>
+    <!-- SECCIÓN 1: Crear o Seleccionar Actor -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">Gestión de Actores</div>
+      <div class="card-body">
 
-    <h2>Ver Logs</h2>
-    <button id="showLogs">Mostrar Logs</button>
-    <div id="logsResponse"></div>
+        <form id="createActorForm" class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label for="actorName" class="form-label">Nombre del Actor</label>
+            <input type="text" id="actorName" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label for="actorRole" class="form-label">Rol</label>
+            <select id="actorRole" class="form-select" required>
+              <option value="beneficiary">Beneficiary</option>
+              <option value="psp_beneficiary">PSP Beneficiary</option>
+              <option value="psp_payer">PSP Payer</option>
+              <option value="payer">Payer</option>
+            </select>
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">Crear Actor</button>
+          </div>
+        </form>
 
-    <script src="app.js"></script>
+        <!-- Muestra la respuesta de crear actor -->
+        <div id="actorResponse" class="alert alert-secondary" style="display:none;"></div>
+
+        <!-- Panel para Actor Actual (id y rol) -->
+        <div class="mt-3">
+          <h5>Actor Actual:</h5>
+          <div id="currentActorInfo" class="p-2 bg-light border">
+            <p><strong>actor_id:</strong> <span id="currentActorId"></span></p>
+            <p><strong>rol:</strong> <span id="currentActorRole"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: Beneficiary: Crear RTP -->
+    <div class="card mb-4" id="beneficiaryActions" style="display:none;">
+      <div class="card-header bg-success text-white">Acciones - Beneficiary</div>
+      <div class="card-body">
+        <form id="createRTPForm" class="row g-3 mb-3">
+          <h5>Crear RTP</h5>
+          <div class="col-md-4">
+            <label for="iban" class="form-label">IBAN</label>
+            <input type="text" id="iban" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label for="amount" class="form-label">Monto</label>
+            <input type="number" step="0.01" id="amount" class="form-control" required>
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-success">Crear RTP</button>
+          </div>
+        </form>
+        <div id="createRTPResponse" class="alert alert-secondary" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: PSP Beneficiary: Validar y Enrutar RTP -->
+    <div class="card mb-4" id="pspBeneficiaryActions" style="display:none;">
+      <div class="card-header bg-warning text-dark">Acciones - PSP Beneficiary</div>
+      <div class="card-body">
+
+        <!-- Validar Beneficiario -->
+        <form id="validateBeneficiaryForm" class="row g-3 mb-3">
+          <h5>Validar RTP (Beneficiary)</h5>
+          <div class="col-md-4">
+            <label for="rtpIdValidateBene" class="form-label">ID del RTP</label>
+            <input type="number" id="rtpIdValidateBene" class="form-control" required>
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-warning text-white">Validar Beneficiary</button>
+          </div>
+        </form>
+        <div id="validateBeneficiaryResponse" class="alert alert-secondary" style="display:none;"></div>
+
+        <!-- Enrutar RTP -->
+        <form id="routeForm" class="row g-3">
+          <h5>Enrutar RTP al PSP Payer</h5>
+          <div class="col-md-4">
+            <label for="rtpIdRoute" class="form-label">ID del RTP</label>
+            <input type="number" id="rtpIdRoute" class="form-control" required>
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-warning text-white">Enrutar</button>
+          </div>
+        </form>
+        <div id="routeResponse" class="alert alert-secondary" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 4: PSP Payer: Validar RTP -->
+    <div class="card mb-4" id="pspPayerActions" style="display:none;">
+      <div class="card-header bg-info text-white">Acciones - PSP Payer</div>
+      <div class="card-body">
+        <form id="validatePayerForm" class="row g-3">
+          <h5>Validar RTP (Payer)</h5>
+          <div class="col-md-4">
+            <label for="rtpIdValidatePayer" class="form-label">ID del RTP</label>
+            <input type="number" id="rtpIdValidatePayer" class="form-control" required>
+          </div>
+          <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-info text-white">Validar Payer</button>
+          </div>
+        </form>
+        <div id="validatePayerResponse" class="alert alert-secondary" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 5: Payer: Aceptar o Rechazar RTP -->
+    <div class="card mb-4" id="payerActions" style="display:none;">
+      <div class="card-header bg-danger text-white">Acciones - Payer</div>
+      <div class="card-body">
+        <form id="decisionForm" class="row g-3">
+          <h5>Decidir RTP (aceptado o rechazado)</h5>
+          <div class="col-md-3">
+            <label for="rtpIdDecision" class="form-label">ID del RTP</label>
+            <input type="number" id="rtpIdDecision" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label for="decision" class="form-label">Decisión</label>
+            <select id="decision" class="form-select">
+              <option value="aceptado">aceptado</option>
+              <option value="rechazado">rechazado</option>
+            </select>
+          </div>
+          <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-danger">Decidir</button>
+          </div>
+        </form>
+        <div id="decisionResponse" class="alert alert-secondary" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN Logs -->
+    <div class="card mb-4">
+      <div class="card-header bg-secondary text-white">Ver Logs</div>
+      <div class="card-body">
+        <button id="showLogs" class="btn btn-dark">Mostrar Logs</button>
+        <div id="logsResponse" class="mt-3"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts de Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
