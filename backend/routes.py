@@ -95,3 +95,62 @@ def get_actor_info(actor_id):
     if not actor:
         return jsonify({"error": "Actor no encontrado"}), 404
     return jsonify(actor.to_dict())
+
+
+#auth_blueprint = Blueprint('auth', __name__)
+
+@rtp_blueprint.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    if not username or not password:
+        return jsonify({"error": "Faltan credenciales"}), 400
+    
+    actor = Actor.query.filter_by(username=username).first()
+    if not actor:
+        return jsonify({"error": "Usuario no existe"}), 404
+    
+    if actor.password != password:
+        return jsonify({"error": "Contraseña incorrecta"}), 401
+    
+    # Login exitoso
+    return jsonify({
+        "message": "Login correcto",
+        "actor_id": actor.id,
+        "role": actor.role,
+        "name": actor.name
+    })
+
+@rtp_blueprint.route('/profile/<int:actor_id>', methods=['GET'])
+def get_profile(actor_id):
+    actor = Actor.query.get(actor_id)
+    if not actor:
+        return jsonify({"error": "Actor no encontrado"}), 404
+    # Si quieres restringir a payer: verifícalo con su rol, etc.
+    return jsonify(actor.to_dict()), 200
+
+
+@rtp_blueprint.route('/profile', methods=['POST'])
+@role_required('payer')
+def update_profile():
+    data = request.get_json() or {}
+    actor_id = data.get('actor_id')
+    actor = Actor.query.get(actor_id)
+    if not actor:
+        return jsonify({"error": "Actor no encontrado"}), 404
+
+    # Campos opcionales
+    new_photo = data.get('photo_url')
+    new_iban = data.get('iban')
+    new_balance = data.get('balance')
+
+    if new_photo is not None:
+        actor.photo_url = new_photo
+    if new_iban is not None:
+        actor.iban = new_iban
+    if new_balance is not None:
+        actor.balance = float(new_balance)
+
+    db.session.commit()
+    return jsonify({"message": "Perfil actualizado", "actor": actor.to_dict()})

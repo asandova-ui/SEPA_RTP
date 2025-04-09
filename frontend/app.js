@@ -1,114 +1,238 @@
-// Variables globales
+/* app.js */
+
 let currentActorId = null;
 let currentActorRole = null;
 
-/** 
- * crearActor:
- * Llama al endpoint /actors con un NOMBRE HARDCODED Y ROL dado por parámetro.
- * Se usará cuando pulsemos uno de los 4 botones de "Crear Actores".
- */
-function crearActor(role) {
-  // Podrías pedirle un nombre por prompt(), o generarlo aleatorio, etc.
-  const defaultName = prompt(`Introduzca el nombre del actor para el rol ${role}:`, `${role}_name`);
-  if (!defaultName) {
-    return; // Usuario canceló
-  }
+/** LOGIN */
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
 
-  const data = { 
-    name: defaultName,
-    role: role
-  };
-
-  fetch('http://127.0.0.1:5000/actors', {
+  fetch('http://127.0.0.1:5000/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(result => {
-    const msgDiv = document.getElementById('actorCreationResponse');
-    msgDiv.classList.remove('invisible-section');
-    msgDiv.innerHTML = JSON.stringify(result, null, 2);
-  })
-  .catch(err => {
-    console.error(err);
-  });
-}
-
-// Manejar el formulario de "Seleccionar Actor Activo"
-document.getElementById('selectActorForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const actorIdInput = document.getElementById('actorIdSelect');
-  const actorIdValue = parseInt(actorIdInput.value);
-
-  if (!actorIdValue) return;
-
-  // Llamamos a un endpoint para verificar qué rol tiene
-  // Si no existe actor, sale error
-  // Sino, actualizamos currentActorId, currentActorRole
-  fetch(`http://127.0.0.1:5000/actors_info/${actorIdValue}`, {
-    method: 'GET'
+    body: JSON.stringify({ username, password })
   })
   .then(res => res.json())
   .then(data => {
-    // Si hay error, lo mostramos
     if (data.error) {
-      document.getElementById('selectActorError').classList.remove('invisible-section');
-      document.getElementById('selectActorError').innerText = data.error;
-      document.getElementById('currentActorCard').classList.add('invisible-section');
+      document.getElementById('loginError').classList.remove('invisible-section');
+      document.getElementById('loginError').innerText = data.error;
       return;
     }
-
-    // Sino, asignamos actor actual
-    currentActorId = data.id;
+    currentActorId = data.actor_id;
     currentActorRole = data.role;
-    // Mostramos cartita
-    document.getElementById('selectActorError').classList.add('invisible-section');
-    document.getElementById('currentActorCard').classList.remove('invisible-section');
-    document.getElementById('currentActorId').innerText = data.id;
-    document.getElementById('currentActorRole').innerText = data.role;
 
-    // Mostramos/ocultamos secciones en función del rol
-    mostrarAccionesPorRol(data.role);
+    // Oculta la sección de login y muestra el contenido
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('bankContent').classList.remove('invisible-section');
+    document.getElementById('mainNavbar').style.display = 'block';
+
+    // Mostrar info en la navbar
+    document.getElementById('navbarUserInfo').innerText = data.name + " (" + data.role + ")";
+    
+    // Cargar la vista principal
+    mostrarSeccion('homeDashboard', true);
   })
   .catch(err => console.error(err));
 });
 
-/**
- * mostrarAccionesPorRol
- * Oculta todos los paneles de acciones y sólo muestra el que corresponde al rol actual.
- */
-function mostrarAccionesPorRol(role) {
-  // Ocultar todo
-  document.getElementById('beneficiaryActions').classList.add('invisible-section');
-  document.getElementById('pspBeneficiaryActions').classList.add('invisible-section');
-  document.getElementById('pspPayerActions').classList.add('invisible-section');
-  document.getElementById('payerActions').classList.add('invisible-section');
+/** mostrarSeccion */
+function mostrarSeccion(sectionId, reloadHome=false) {
+  const secciones = ['homeDashboard', 'seccionCuentas', 'seccionTarjetas', 'seccionPerfil', 'seccionRTP'];
+  secciones.forEach(s => {
+    document.getElementById(s).classList.add('invisible-section');
+  });
 
-  if (role === 'beneficiary') {
+  document.getElementById(sectionId).classList.remove('invisible-section');
+  
+  if (sectionId === 'homeDashboard' && reloadHome) {
+    cargarHomeDashboard();
+  }
+  if (sectionId === 'seccionRTP') {
+    mostrarPanelRTPporRol();
+  }
+  if (sectionId === 'seccionPerfil') {
+    cargarPerfil();
+  }
+  
+  // Control del menú inferior
+  const bottomMenu = document.getElementById('bottomMenuSquares');
+  if (sectionId === 'homeDashboard') {
+    const navbarCollapse = document.getElementById('navbarNav');
+    if (navbarCollapse.classList.contains('show')) {
+      bottomMenu.style.display = 'none';
+    } else {
+      bottomMenu.style.display = 'flex';
+    }
+  } else {
+    bottomMenu.style.display = 'none';
+  }
+}
+
+/** cargarHomeDashboard */
+function cargarHomeDashboard() {
+  fetch(`http://127.0.0.1:5000/profile/${currentActorId}`)
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) {
+      console.error("Error al cargar homeDashboard:", data.error);
+      return;
+    }
+    // Formatear el balance
+    let balance = data.balance != null ? data.balance : 0;
+    let balanceTxt = formatMoney(balance);
+    document.getElementById('homeBalanceDisplay').innerText = balanceTxt;
+
+    // IBAN
+    let ibanTxt = data.iban ? formatIBAN(data.iban) : 'empty';
+    document.getElementById('homeIbanDisplay').innerText = ibanTxt;
+
+    // Nombre
+    let nameTxt = data.name ? data.name : 'empty';
+    document.getElementById('homeNameDisplay').innerText = nameTxt;
+
+    // Foto
+    const homePhoto = document.getElementById('homePhoto');
+    if (data.photo_url) {
+      homePhoto.src = data.photo_url;
+      homePhoto.style.display = 'inline';
+    } else {
+      homePhoto.style.display = 'none';
+    }
+
+    // Ajustar fuente del balance (para números muy grandes)
+    adjustFontSize('homeBalanceDisplay', 'balance-circle');
+
+    // Si es payer, mostrar mensaje extra
+    const payerMsg = document.getElementById('payerExtraMsg');
+    if (currentActorRole === 'payer') {
+      payerMsg.classList.remove('invisible-section');
+      payerMsg.textContent = "¡Hola! Como payer, aquí puedes gestionar tus solicitudes de pago.";
+    } else {
+      payerMsg.classList.add('invisible-section');
+    }
+  })
+  .catch(err => console.error(err));
+}
+
+/** Formatear dinero con puntos y coma */
+function formatMoney(value) {
+  let parts = value.toFixed(2).split('.');
+  let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  let decimalPart = parts[1];
+  return integerPart + ',' + decimalPart + ' €';
+}
+
+/** Formatear IBAN */
+function formatIBAN(iban) {
+  return iban.replace(/\s+/g, '').replace(/(.{4})/g, '$1 ').trim();
+}
+
+/** Ajustar tamaño de fuente dinamicamente para que no se salga del círculo */
+function adjustFontSize(elementId, containerId) {
+  const element = document.getElementById(elementId);
+  const container = document.getElementById(containerId);
+  // Establecemos un tamaño base
+  let fontSize = 2.5;
+  element.style.fontSize = fontSize + 'rem';
+  
+  // Vamos reduciendo mientras el ancho o el alto del texto supere los del contenedor
+  while (
+    (element.scrollWidth > container.clientWidth || element.scrollHeight > container.clientHeight) 
+    && fontSize > 0.4
+  ) {
+    fontSize -= 0.1;
+    element.style.fontSize = fontSize + 'rem';
+  }
+}
+
+/** mostrarPanelRTPporRol */
+function mostrarPanelRTPporRol() {
+  const allRTPpanels = ['beneficiaryActions', 'pspBeneficiaryActions', 'pspPayerActions', 'payerActions'];
+  allRTPpanels.forEach(p => {
+    document.getElementById(p).classList.add('invisible-section');
+  });
+
+  if (currentActorRole === 'beneficiary') {
     document.getElementById('beneficiaryActions').classList.remove('invisible-section');
-  } else if (role === 'psp_beneficiary') {
+  } else if (currentActorRole === 'psp_beneficiary') {
     document.getElementById('pspBeneficiaryActions').classList.remove('invisible-section');
-  } else if (role === 'psp_payer') {
+  } else if (currentActorRole === 'psp_payer') {
     document.getElementById('pspPayerActions').classList.remove('invisible-section');
-  } else if (role === 'payer') {
+  } else if (currentActorRole === 'payer') {
     document.getElementById('payerActions').classList.remove('invisible-section');
   }
 }
 
-/**
- * FORM: Crear RTP (Beneficiary)
- */
+/** cargarPerfil */
+function cargarPerfil() {
+  fetch(`http://127.0.0.1:5000/profile/${currentActorId}`)
+  .then(r => r.json())
+  .then(data => {
+    if (data.error) {
+      console.error("Error al cargar perfil:", data.error);
+      return;
+    }
+    const photo = document.getElementById('profilePhoto');
+    if (data.photo_url) {
+      photo.src = data.photo_url;
+      photo.style.display = 'inline';
+    } else {
+      photo.style.display = 'none';
+    }
+    document.getElementById('profileIban').innerText = data.iban || '(sin IBAN)';
+    document.getElementById('profileBalance').innerText = data.balance != null ? data.balance : 0;
+    document.getElementById('editPhoto').value = data.photo_url || '';
+    document.getElementById('editIban').value = data.iban || '';
+    document.getElementById('editBalance').value = data.balance != null ? data.balance : 0;
+  })
+  .catch(err => console.error(err));
+}
+
+/** Actualizar perfil */
+document.getElementById('profileEditForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const newPhoto = document.getElementById('editPhoto').value;
+  const newIban = document.getElementById('editIban').value;
+  const newBal = parseFloat(document.getElementById('editBalance').value);
+
+  const data = {
+    actor_id: currentActorId,
+    photo_url: newPhoto,
+    iban: newIban,
+    balance: newBal
+  };
+
+  fetch('http://127.0.0.1:5000/profile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(resp => {
+    const msgDiv = document.getElementById('profileMsg');
+    msgDiv.classList.remove('invisible-section');
+    if (resp.error) {
+      msgDiv.innerText = resp.error;
+    } else {
+      msgDiv.innerText = "Perfil actualizado correctamente";
+      cargarPerfil();
+    }
+  })
+  .catch(err => console.error(err));
+});
+
+/** Beneficiary: Crear RTP */
 document.getElementById('createRTPForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  // Leemos campos
   const iban = document.getElementById('ibanField').value;
   const amount = parseFloat(document.getElementById('amountField').value);
   const pspBenef = parseInt(document.getElementById('pspBenefField').value);
   const pspPayer = parseInt(document.getElementById('pspPayerField').value);
   const payerId = parseInt(document.getElementById('payerField').value);
 
-  // actor_id es el beneficiary actual
   const data = {
     actor_id: currentActorId,
     psp_beneficiary_id: pspBenef,
@@ -123,141 +247,131 @@ document.getElementById('createRTPForm').addEventListener('submit', function(e) 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(result => {
-    const resp = document.getElementById('createRTPResponse');
-    resp.classList.remove('invisible-section');
-    resp.innerText = JSON.stringify(result, null, 2);
+    const respDiv = document.getElementById('createRTPResponse');
+    respDiv.classList.remove('invisible-section');
+    respDiv.innerText = JSON.stringify(result, null, 2);
   })
   .catch(err => console.error(err));
 });
 
-/**
- * FORM: PSP Beneficiary -> Validar
- */
+/** PSP Beneficiary: Validar RTP */
 document.getElementById('validateBeneficiaryForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const rtpId = document.getElementById('rtpIdValidateBene').value;
+  const data = { actor_id: currentActorId };
 
-  const data = {
-    actor_id: currentActorId
-  };
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-beneficiary`, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(result => {
-    const resp = document.getElementById('validateBeneficiaryResponse');
-    resp.classList.remove('invisible-section');
-    resp.innerText = JSON.stringify(result, null, 2);
+    const respDiv = document.getElementById('validateBeneficiaryResponse');
+    respDiv.classList.remove('invisible-section');
+    respDiv.innerText = JSON.stringify(result, null, 2);
   })
   .catch(err => console.error(err));
 });
 
-/**
- * FORM: PSP Beneficiary -> Enrutar
- */
+/** PSP Beneficiary: Enrutar RTP */
 document.getElementById('routeForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const rtpId = document.getElementById('rtpIdRoute').value;
+  const data = { actor_id: currentActorId };
 
-  const data = {
-    actor_id: currentActorId
-  };
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/route`, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(result => {
-    const resp = document.getElementById('routeResponse');
-    resp.classList.remove('invisible-section');
-    resp.innerText = JSON.stringify(result, null, 2);
+    const respDiv = document.getElementById('routeResponse');
+    respDiv.classList.remove('invisible-section');
+    respDiv.innerText = JSON.stringify(result, null, 2);
   })
   .catch(err => console.error(err));
 });
 
-/**
- * FORM: PSP Payer -> Validar
- */
+/** PSP Payer: Validar RTP */
 document.getElementById('validatePayerForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const rtpId = document.getElementById('rtpIdValidatePayer').value;
+  const data = { actor_id: currentActorId };
 
-  const data = {
-    actor_id: currentActorId
-  };
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-payer`, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(result => {
-    const resp = document.getElementById('validatePayerResponse');
-    resp.classList.remove('invisible-section');
-    resp.innerText = JSON.stringify(result, null, 2);
+    const respDiv = document.getElementById('validatePayerResponse');
+    respDiv.classList.remove('invisible-section');
+    respDiv.innerText = JSON.stringify(result, null, 2);
   })
   .catch(err => console.error(err));
 });
 
-/**
- * FORM: Payer -> Decisión
- */
+/** Payer: Decidir RTP */
 document.getElementById('decisionForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const rtpId = document.getElementById('rtpIdDecision').value;
   const decisionValue = document.getElementById('decision').value;
-
   const data = {
     actor_id: currentActorId,
     decision: decisionValue
   };
+
   fetch(`http://127.0.0.1:5000/rtp/${rtpId}/decision`, {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
   })
-  .then(res => res.json())
+  .then(r => r.json())
   .then(result => {
-    const resp = document.getElementById('decisionResponse');
-    resp.classList.remove('invisible-section');
-    resp.innerText = JSON.stringify(result, null, 2);
+    const respDiv = document.getElementById('decisionResponse');
+    respDiv.classList.remove('invisible-section');
+    respDiv.innerText = JSON.stringify(result, null, 2);
   })
   .catch(err => console.error(err));
 });
 
-/**
- * Botón: Mostrar Logs
- */
+/** Mostrar Logs */
 document.getElementById('showLogs').addEventListener('click', () => {
-  fetch(`http://127.0.0.1:5000/logs`)
-    .then(res => res.json())
-    .then(logs => {
-      let html = `<ul class="list-group">`;
-      logs.forEach(log => {
-        html += `<li class="list-group-item">
-          <strong>LogID ${log.id} </strong> 
-          [RTP ${log.rtp_id}] 
-          ${log.old_status} => ${log.new_status} 
-          <small>(${log.timestamp})</small>
-          </li>`;
-      });
-      html += `</ul>`;
-
-      document.getElementById('logsResponse').innerHTML = html;
-    })
-    .catch(err => console.error(err));
+  fetch('http://127.0.0.1:5000/logs')
+  .then(r => r.json())
+  .then(logs => {
+    let html = `<ul class="list-group">`;
+    logs.forEach(l => {
+      html += `<li class="list-group-item">
+        <strong>RTP ${l.rtp_id}:</strong> ${l.old_status} ⇒ ${l.new_status}
+        <small> (${l.timestamp})</small>
+      </li>`;
+    });
+    html += `</ul>`;
+    document.getElementById('logsResponse').innerHTML = html;
+  })
+  .catch(err => console.error(err));
 });
 
-/**
- * Al arrancar la página, no hace nada especial,
- * pero podríamos ocultar secciones si fuera necesario.
- */
-
-// Extra: Endpoint /actors_info/<id> para obtener info de un actor:
- // Deberás crear en tu backend la ruta GET /actors_info/<int:actor_id>
- // para que devuelva {id,role,...} o error si no existe.
+/* Controlar visibilidad del menú inferior al expandir/contraer navbar */
+document.addEventListener('shown.bs.collapse', function(e) {
+  if(e.target.id === "navbarNav") {
+    const bottomMenu = document.getElementById('bottomMenuSquares');
+    if (!document.getElementById('homeDashboard').classList.contains('invisible-section')) {
+      bottomMenu.style.display = 'none';
+    }
+  }
+});
+document.addEventListener('hidden.bs.collapse', function(e) {
+  if(e.target.id === "navbarNav") {
+    const bottomMenu = document.getElementById('bottomMenuSquares');
+    if (!document.getElementById('homeDashboard').classList.contains('invisible-section')) {
+      bottomMenu.style.display = 'flex';
+    }
+  }
+});

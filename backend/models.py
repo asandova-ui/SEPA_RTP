@@ -49,12 +49,23 @@ class Log(db.Model):
 class Actor(db.Model):
     __tablename__ = 'actor'
     id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(50))
     name = db.Column(db.String(50), nullable=False)
     role = db.Column(db.String(20), nullable=False)
+
+    # NUEVOS CAMPOS:
+    photo_url = db.Column(db.String(200), nullable=True)  # URL o base64
+    iban = db.Column(db.String(34), nullable=True)
+    balance = db.Column(db.Float, default=0.0)            # Saldo
 
     def to_dict(self):
         return {
             "id": self.id,
+            "username": self.username,
             "name": self.name,
-            "role": self.role
+            "role": self.role,
+            "photo_url": self.photo_url,
+            "iban": self.iban,
+            "balance": self.balance
         }

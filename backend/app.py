@@ -1,6 +1,6 @@
 from flask import Flask, send_from_directory
 from config import Config
-from models import db
+from models import db, Actor
 import os
 import webbrowser
 from routes import rtp_blueprint
@@ -11,9 +11,42 @@ app.config.from_object(Config)
 db.init_app(app)
 
 with app.app_context():
-    # Para desarrollo: eliminar y recrear las tablas (temporal)
     db.drop_all()
     db.create_all()
+
+    # Crear los 4 usuarios predefinidos:
+    # 1) "Mercadona" => beneficiary
+    # 2) "PSPMercadona" => psp_beneficiary
+    # 3) "PSPalonso" => psp_payer
+    # 4) "alonso" => payer
+    # Contraseñas ficticias, p.ej. "1234"
+    mercadona = Actor(
+        username="Mercadona",
+        password="1234",
+        name="Mercadona S.A.",
+        role="beneficiary"
+    )
+    psp_merc = Actor(
+        username="PSPMercadona",
+        password="1234",
+        name="PSP de Mercadona",
+        role="psp_beneficiary"
+    )
+    psp_alonso = Actor(
+        username="PSPalonso",
+        password="1234",
+        name="PSP de Alonso",
+        role="psp_payer"
+    )
+    alonso = Actor(
+        username="alonso",
+        password="1234",
+        name="Alonso",
+        role="payer"
+    )
+
+    db.session.add_all([mercadona, psp_merc, psp_alonso, alonso])
+    db.session.commit()
 
 # Servir index.html en la raíz
 @app.route('/')
