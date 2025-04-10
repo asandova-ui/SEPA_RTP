@@ -2,6 +2,35 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class Actor(db.Model):
+    __tablename__ = 'actor'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(50))
+    name = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(20), nullable=False)
+
+    photo_url = db.Column(db.String(200), nullable=True)  # URL o base64
+    iban = db.Column(db.String(34), nullable=True)
+    balance = db.Column(db.Float, default=0.0)
+
+    # Campo nuevo: psp_id, que referencia a otro Actor que es PSP
+    psp_id = db.Column(db.Integer, db.ForeignKey('actor.id'), nullable=True)
+    # Relación para que se pueda acceder con actor.psp
+    psp = db.relationship('Actor', remote_side=[id])
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "name": self.name,
+            "role": self.role,
+            "photo_url": self.photo_url,
+            "iban": self.iban,
+            "balance": self.balance,
+            "psp_id": self.psp_id  # Podríamos incluir más info del psp, etc.
+        }
+
 class RTP(db.Model):
     __tablename__ = 'rtp'
     id = db.Column(db.Integer, primary_key=True)
@@ -44,28 +73,4 @@ class Log(db.Model):
             "new_status": self.new_status,
             "timestamp": self.timestamp.isoformat(),
             "hash_value": self.hash_value
-        }
-
-class Actor(db.Model):
-    __tablename__ = 'actor'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(50))
-    name = db.Column(db.String(50), nullable=False)
-    role = db.Column(db.String(20), nullable=False)
-
-    # NUEVOS CAMPOS:
-    photo_url = db.Column(db.String(200), nullable=True)  # URL o base64
-    iban = db.Column(db.String(34), nullable=True)
-    balance = db.Column(db.Float, default=0.0)            # Saldo
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "username": self.username,
-            "name": self.name,
-            "role": self.role,
-            "photo_url": self.photo_url,
-            "iban": self.iban,
-            "balance": self.balance
         }

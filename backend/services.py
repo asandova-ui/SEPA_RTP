@@ -1,22 +1,51 @@
-from models import db, RTP
+from models import db, RTP, Actor
 from utils import cambiar_estado_rtp, rechazar_rtp, validar_iban
 
-def crear_rtp_service(data, benef_id, psp_benef_id, psp_payer_id, payer_id):
-    iban = data.get('iban')
+def crear_rtp_service(data):
+    beneficiary_id = data.get('actor_id')
+    payer_iban = data.get('payer_iban')
     amount = data.get('amount')
 
-    # Podrías validar que no sean None, etc.
+    # 1) Beneficiario
+    beneficiary = Actor.query.get(beneficiary_id)
+    if not beneficiary or beneficiary.role != 'beneficiary':
+        return {"error": "El actor no es beneficiario o no existe"}
+
+    # 2) PSP del Beneficiario
+    if not beneficiary.psp_id:
+        return {"error": "El beneficiario no tiene PSP asociado"}
+    psp_benef_id = beneficiary.psp_id
+
+    # 3) Hallar el pagador por su IBAN
+    payer = Actor.query.filter_by(iban=payer_iban, role='payer').first()
+    if not payer:
+        return {"error": "No se encontró un pagador con ese IBAN"}
+
+    # 4) PSP del pagador
+    if not payer.psp_id:
+        return {"error": "El pagador no tiene PSP asociado"}
+    psp_payer_id = payer.psp_id
+
+    # Crear el RTP
     nuevo_rtp = RTP(
-        iban=iban,
+        iban=payer_iban,
         amount=amount,
-        beneficiary_id=benef_id,
+        beneficiary_id=beneficiary.id,
         psp_beneficiary_id=psp_benef_id,
         psp_payer_id=psp_payer_id,
-        payer_id=payer_id
+        payer_id=payer.id
     )
     db.session.add(nuevo_rtp)
     db.session.commit()
-    return {"message": "RTP creado", "id": nuevo_rtp.id}
+
+    return {
+        "message": "RTP creado correctamente",
+        "id": nuevo_rtp.id,
+        "beneficiary_id": beneficiary.id,
+        "psp_beneficiary_id": psp_benef_id,
+        "payer_id": payer.id,
+        "psp_payer_id": psp_payer_id
+    }
 
 def validar_beneficiario_service(rtp_id):
     rtp_obj = RTP.query.get(rtp_id)

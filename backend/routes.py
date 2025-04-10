@@ -16,13 +16,21 @@ rtp_blueprint = Blueprint('rtp', __name__)
 @role_required('beneficiary')
 def crear_rtp():
     data = request.get_json()
-    # Asegúrate de tomar actor_id del campo "actor_id"
-    benef_id = data.get('actor_id')  
-    psp_benef_id = data.get('psp_beneficiary_id')
-    psp_payer_id = data.get('psp_payer_id')
-    payer_id = data.get('payer_id')
+    # ID del beneficiario que está logueado
+    beneficiary_id = data.get('actor_id')
+    # El IBAN del pagador
+    payer_iban = data.get('payer_iban')
+    # Monto
+    amount = data.get('amount')
+
+    if not payer_iban:
+        return jsonify({"error": "Falta iban"}), 400
     
-    result = crear_rtp_service(data, benef_id, psp_benef_id, psp_payer_id, payer_id)
+    if not amount:
+        return jsonify({"error": "Falta amount"}), 400
+
+    # Llamamos a la lógica de creación en services
+    result = crear_rtp_service(data)
     status = 201 if "error" not in result else 400
     return jsonify(result), status
 

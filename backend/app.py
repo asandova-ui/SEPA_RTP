@@ -24,7 +24,9 @@ with app.app_context():
         username="Mercadona",
         password="1234",
         name="Mercadona S.A.",
-        role="beneficiary"
+        role="beneficiary",
+        iban="ES26001234567890123456",
+        balance=0.0
     )
     psp_merc = Actor(
         username="PSPMercadona",
@@ -42,10 +44,19 @@ with app.app_context():
         username="alonso",
         password="1234",
         name="Alonso",
-        role="payer"
+        role="payer",
+        iban="ES45098765432100000000",
+        balance=1000.0
     )
 
     db.session.add_all([mercadona, psp_merc, psp_alonso, alonso])
+    db.session.commit()
+
+    # Ahora vinculamos:
+    # - Mercadona -> PSPMercadona
+    # - alonso -> PSPalonso
+    mercadona.psp_id = psp_merc.id
+    alonso.psp_id = psp_alonso.id
     db.session.commit()
 
 # Servir index.html en la raíz
