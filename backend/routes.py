@@ -8,6 +8,7 @@ from services import (
 )
 from utils_roles import role_required
 from models import Actor, db
+from flask import request
 
 rtp_blueprint = Blueprint('rtp', __name__)
 

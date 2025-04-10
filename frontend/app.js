@@ -3,6 +3,9 @@
 let currentActorId = null;
 let currentActorRole = null;
 
+// Inicializar la conexión Socket.IO
+const socket = io.connect('http://127.0.0.1:5000');
+
 /** LOGIN */
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -24,6 +27,9 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     currentActorId = data.actor_id;
     currentActorRole = data.role;
 
+    // Emitir 'join' para unirse a la sala correspondiente
+    socket.emit('join', { actor_id: currentActorId });
+
     // Oculta la sección de login y muestra el contenido
     document.getElementById('loginSection').style.display = 'none';
     document.getElementById('bankContent').classList.remove('invisible-section');
@@ -38,7 +44,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   .catch(err => console.error(err));
 });
 
-/** mostrarSeccion */
+/** Función para mostrar secciones */
 function mostrarSeccion(sectionId, reloadHome=false) {
   const secciones = ['homeDashboard', 'seccionCuentas', 'seccionTarjetas', 'seccionPerfil', 'seccionRTP'];
   secciones.forEach(s => {
@@ -50,11 +56,12 @@ function mostrarSeccion(sectionId, reloadHome=false) {
   if (sectionId === 'homeDashboard' && reloadHome) {
     cargarHomeDashboard();
   }
-  if (sectionId === 'seccionRTP') {
-    mostrarPanelRTPporRol();
-  }
   if (sectionId === 'seccionPerfil') {
     cargarPerfil();
+  }
+  // Agregamos la llamada cuando se muestra la sección RTP
+  if (sectionId === 'seccionRTP') {
+    mostrarPanelRTPporRol();
   }
   
   // Control del menú inferior
@@ -134,35 +141,15 @@ function formatIBAN(iban) {
 function adjustFontSize(elementId, containerId) {
   const element = document.getElementById(elementId);
   const container = document.getElementById(containerId);
-  // Establecemos un tamaño base
   let fontSize = 2.5;
   element.style.fontSize = fontSize + 'rem';
   
-  // Vamos reduciendo mientras el ancho o el alto del texto supere los del contenedor
   while (
     (element.scrollWidth > container.clientWidth || element.scrollHeight > container.clientHeight) 
     && fontSize > 0.4
   ) {
     fontSize -= 0.1;
     element.style.fontSize = fontSize + 'rem';
-  }
-}
-
-/** mostrarPanelRTPporRol */
-function mostrarPanelRTPporRol() {
-  const allRTPpanels = ['beneficiaryActions', 'pspBeneficiaryActions', 'pspPayerActions', 'payerActions'];
-  allRTPpanels.forEach(p => {
-    document.getElementById(p).classList.add('invisible-section');
-  });
-
-  if (currentActorRole === 'beneficiary') {
-    document.getElementById('beneficiaryActions').classList.remove('invisible-section');
-  } else if (currentActorRole === 'psp_beneficiary') {
-    document.getElementById('pspBeneficiaryActions').classList.remove('invisible-section');
-  } else if (currentActorRole === 'psp_payer') {
-    document.getElementById('pspPayerActions').classList.remove('invisible-section');
-  } else if (currentActorRole === 'payer') {
-    document.getElementById('payerActions').classList.remove('invisible-section');
   }
 }
 
@@ -220,135 +207,6 @@ document.getElementById('profileEditForm').addEventListener('submit', function(e
       msgDiv.innerText = "Perfil actualizado correctamente";
       cargarPerfil();
     }
-  })
-  .catch(err => console.error(err));
-});
-
-/** Beneficiary: Crear RTP */
-document.getElementById('createRTPForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const iban = document.getElementById('ibanField').value;
-  const amount = parseFloat(document.getElementById('amountField').value);
-
-  // Solo enviamos actor_id, iban y amount
-  const data = {
-    actor_id: currentActorId,
-    payer_iban: iban,
-    amount: amount
-  };
-
-  fetch('http://127.0.0.1:5000/rtp', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(result => {
-    const respDiv = document.getElementById('createRTPResponse');
-    respDiv.classList.remove('invisible-section');
-    respDiv.innerText = JSON.stringify(result, null, 2);
-  })
-  .catch(err => console.error(err));
-});
-
-/** PSP Beneficiary: Validar RTP */
-document.getElementById('validateBeneficiaryForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const rtpId = document.getElementById('rtpIdValidateBene').value;
-  const data = { actor_id: currentActorId };
-
-  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-beneficiary`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(result => {
-    const respDiv = document.getElementById('validateBeneficiaryResponse');
-    respDiv.classList.remove('invisible-section');
-    respDiv.innerText = JSON.stringify(result, null, 2);
-  })
-  .catch(err => console.error(err));
-});
-
-/** PSP Beneficiary: Enrutar RTP */
-document.getElementById('routeForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const rtpId = document.getElementById('rtpIdRoute').value;
-  const data = { actor_id: currentActorId };
-
-  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/route`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(result => {
-    const respDiv = document.getElementById('routeResponse');
-    respDiv.classList.remove('invisible-section');
-    respDiv.innerText = JSON.stringify(result, null, 2);
-  })
-  .catch(err => console.error(err));
-});
-
-/** PSP Payer: Validar RTP */
-document.getElementById('validatePayerForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const rtpId = document.getElementById('rtpIdValidatePayer').value;
-  const data = { actor_id: currentActorId };
-
-  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/validate-payer`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(result => {
-    const respDiv = document.getElementById('validatePayerResponse');
-    respDiv.classList.remove('invisible-section');
-    respDiv.innerText = JSON.stringify(result, null, 2);
-  })
-  .catch(err => console.error(err));
-});
-
-/** Payer: Decidir RTP */
-document.getElementById('decisionForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const rtpId = document.getElementById('rtpIdDecision').value;
-  const decisionValue = document.getElementById('decision').value;
-  const data = {
-    actor_id: currentActorId,
-    decision: decisionValue
-  };
-
-  fetch(`http://127.0.0.1:5000/rtp/${rtpId}/decision`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(r => r.json())
-  .then(result => {
-    const respDiv = document.getElementById('decisionResponse');
-    respDiv.classList.remove('invisible-section');
-    respDiv.innerText = JSON.stringify(result, null, 2);
-  })
-  .catch(err => console.error(err));
-});
-
-/** Mostrar Logs */
-document.getElementById('showLogs').addEventListener('click', () => {
-  fetch('http://127.0.0.1:5000/logs')
-  .then(r => r.json())
-  .then(logs => {
-    let html = `<ul class="list-group">`;
-    logs.forEach(l => {
-      html += `<li class="list-group-item">
-        <strong>RTP ${l.rtp_id}:</strong> ${l.old_status} ⇒ ${l.new_status}
-        <small> (${l.timestamp})</small>
-      </li>`;
-    });
-    html += `</ul>`;
-    document.getElementById('logsResponse').innerHTML = html;
   })
   .catch(err => console.error(err));
 });

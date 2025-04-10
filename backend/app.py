@@ -1,4 +1,5 @@
 from flask import Flask, send_from_directory
+from ext_socketio import socketio, join_room
 from config import Config
 from models import db, Actor
 import os
@@ -9,6 +10,9 @@ STATIC_FOLDER = os.path.join(os.path.dirname(__file__), '../frontend')
 app = Flask(__name__, static_folder=STATIC_FOLDER)
 app.config.from_object(Config)
 db.init_app(app)
+
+# Inicialización de SocketIO
+socketio.init_app(app, cors_allowed_origins="*")
 
 with app.app_context():
     db.drop_all()
@@ -72,6 +76,15 @@ def serve_static(filename):
 # Registrar el blueprint con todos los endpoints de RTP
 app.register_blueprint(rtp_blueprint)
 
+@socketio.on('join')
+def handle_join(data):
+    actor_id = data['actor_id']
+    actor = Actor.query.get(actor_id)
+    if actor:
+        room = f"{actor.role}_{actor_id}"
+        join_room(room)
+        print(f"Actor {actor_id} se unió a la sala {room}")
+
 if __name__ == '__main__':
     webbrowser.open("http://127.0.0.1:5000/")
-    app.run(debug=True)
+    socketio.run(app, debug=True)
