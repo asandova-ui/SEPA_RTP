@@ -229,16 +229,11 @@ document.getElementById('createRTPForm').addEventListener('submit', function(e) 
   e.preventDefault();
   const iban = document.getElementById('ibanField').value;
   const amount = parseFloat(document.getElementById('amountField').value);
-  const pspBenef = parseInt(document.getElementById('pspBenefField').value);
-  const pspPayer = parseInt(document.getElementById('pspPayerField').value);
-  const payerId = parseInt(document.getElementById('payerField').value);
 
+  // Solo enviamos actor_id, iban y amount
   const data = {
     actor_id: currentActorId,
-    psp_beneficiary_id: pspBenef,
-    psp_payer_id: pspPayer,
-    payer_id: payerId,
-    iban: iban,
+    payer_iban: iban,
     amount: amount
   };
 
