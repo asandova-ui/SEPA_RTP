@@ -1,0 +1,124 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[spanish, english, es-tabla]{babel}
+\usepackage[hidelinks]{hyperref}
+\usepackage{makecell}
+\usepackage[numbered,framed]{matlab-prettifier}
+\usepackage{listings}
+\usepackage{color} % red, green, blue, yellow, cyan, magenta, black, white
+\usepackage{enumitem}
+\usepackage{lmodern}
+
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{footnote}          % <— nuevo
+\usepackage{threeparttable}
+\definecolor{mylilas}{RGB}{170,55,241}
+\definecolor{backcolour}{rgb}{0.92,0.95,0.95}
+
+\begin{document}
+
+% Configurando la numeración arábiga desde el inicio
+\pagenumbering{arabic}
+
+% Creando la portada
+\begin{titlepage}
+    \centering
+    {\includegraphics[width=0.9\textwidth]{Imagenes/Universidad-de-Valladolid.png}}\par
+    {\bfseries\Large Escuela Técnica Superior de Ingenieros de Telecomunicación\par}
+    \vspace{0.5cm}
+    {\bfseries\itshape\Large Trabajo de Fin de Grado \par}
+    \vspace{0.5cm}
+    {\scshape Grado en Ingeniería de Tecnologías de Telecomunicación \par}
+    \vspace{0.5cm}
+    {\bfseries\scshape\Large Implementación de un Servidor HTTP para Emular un Prototipo del Sistema Request To Pay del EPC \par}
+    \vspace{1.5cm}
+    { Autor: Alonso\\}
+    { Sandoval Martínez \par}
+    { Tutores:\\}
+    { D. Tutor1 \\ D. Tutor2 \par}
+    \vspace{0.5cm} {Valladolid, MES 202X \par}
+\end{titlepage}
+
+% Configurando el idioma
+\selectlanguage{spanish}  
+
+% Añadiendo el índice justo después de la portada
+\newpage
+\tableofcontents
+
+% Añadiendo los agradecimientos desde un archivo externo
+\newpage
+\input{src/agradecimientos.tex}
+
+% Añadiendo el resumen en español
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{Resumen}
+\begin{abstract}
+    Este trabajo presenta la implementación de Como se muestra en \cite{smith2020iapago}, el protocolo SEPA permite...
+    un servidor HTTP para emular un prototipo del sistema Request To Pay desarrollado por el European Payments Council (EPC), abordando...
+\end{abstract}
+\noindent {\small \textbf{\textit{Palabras clave---}} Servidor HTTP, Request To Pay, EPC, Telecomunicaciones, Pagos Electrónicos}
+
+% Volviendo al español para el resto del documento
+\selectlanguage{spanish} 
+
+
+% Comenzando el cuerpo principal (numeración ya es arábiga)
+\newpage
+
+\input{src/introduccion.tex}
+\newpage
+
+\input{src/estado_arte.tex}
+\newpage
+
+% 3. Diseño e Implementación
+\input{src/implementacion.tex}
+\newpage
+
+% 4. Métodos
+\input{src/metodos.tex}
+\newpage
+
+% 5. Resultados y discusión
+\input{src/resultados.tex}
+\newpage
+% 6. Conclusiones y líneas futuras
+\input{src/conclusiones.tex}
+\newpage
+% Añadiendo los apéndices
+\clearpage
+\appendix
+\section{Códigos}
+\label{sec:apendice}
+    \lstinputlisting[caption={Código de ejemplo.}, captionpos=b]{Codes/Example.m}
+
+% Añadiendo las referencias
+\clearpage
+\renewcommand{\bibname}{Referencias}
+\bibliographystyle{castellano2}
+\bibliography{bibliografia}
+
+% Añadiendo el índice de figuras
+\newpage
+\renewcommand{\listfigurename}{Índice de Figuras}
+\listoffigures
+\addcontentsline{toc}{section}{Índice de Figuras}
+
+% Añadiendo el índice de tablas
+\newpage
+\renewcommand{\listtablename}{Índice de Tablas}
+\listoftables
+\addcontentsline{toc}{section}{Índice de Tablas}
+
+% Añadiendo el índice de códigos
+\newpage
+\renewcommand*{\lstlistlistingname}{Índice de Códigos}
+\renewcommand*{\lstlistingname}{Código}
+\lstlistoflistings
+\addcontentsline{toc}{section}{Índice de Códigos}
+
+\end{document}
