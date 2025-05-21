@@ -1,12 +1,65 @@
 \section{Diseño e Implementación}
 \label{sec:DisenoImplementacion}
-Aquí se detalla el proceso de diseño e implementación del servidor HTTP...
+Para implementar un sistema completo de \textit{Request To Pay}, se ha desarrollado un servidor HTTP que expone una API RESTful y un cliente web en tiempo real. El objetivo de este apartado es detallar cómo se ha llevado a cabo esta implementación, así como las fases de desarrollo involucradas.
 
-\subsection{Arquitectura del servidor HTTP}
-\label{subsec:ArquitecturaHTTP}
+\subsection{Fundamentos Teóricos}
+Antes de profundizar en la implementación, es fundamental aclarar los dos pilares teóricos en los que se basa el sistema:
+
+\begin{itemize}
+    \item \textbf{Servidor HTTP}: Una aplicación que permanece a la escucha en un puerto de red, esperando conexiones TCP de clientes capaces de comunicarse mediante el protocolo HTTP. Una vez establecida la conexión, el servidor recibe un mensaje estructurado con los siguientes componentes:
+    \begin{itemize}
+        \item \textit{Línea de petición}: Indica el método (GET, POST, etc.), la ruta del recurso solicitado y la versión del protocolo.
+        \item \textit{Cabeceras}: Aportan metadatos, como el tipo de contenido, credenciales o longitud del mensaje.
+        \item \textit{Cuerpo} (opcional): Contiene datos adicionales, si el método lo requiere.
+    \end{itemize}
+    El servidor interpreta la ruta, determina qué componente interno debe procesarla, ejecuta la lógica correspondiente y genera una respuesta formada por:
+    \begin{itemize}
+        \item \textit{Línea de estado}: Incluye un código de resultado (por ejemplo, 200 OK, 404 Not Found, 500 Internal Server Error).
+        \item \textit{Cabeceras}: Describen la respuesta.
+        \item \textit{Cuerpo} (opcional): Contiene datos, como HTML o JSON.
+    \end{itemize}
+    Tras enviar la respuesta, la conexión puede cerrarse o mantenerse activa para futuras peticiones, dependiendo de la versión del protocolo y las cabeceras de control. En esencia, el servidor HTTP funciona como el centro de operaciones que recibe todas las solicitudes y coordina el acceso a la lógica y los datos de la aplicación.
+
+    \item \textbf{API RESTful}: Se basa en los principios de la arquitectura REST (\textit{Representational State Transfer}\footnote{Transferencia de Estado Representacional}) aplicados al protocolo HTTP para exponer recursos de forma uniforme y predecible. Sus características principales son:
+    \begin{itemize}
+        \item Cada entidad del dominio (por ejemplo, un usuario o una petición RTP) se representa mediante una URL estable.
+        \item Los verbos HTTP (POST, GET, PUT, DELETE) describen operaciones como creación, consulta, modificación o eliminación de recursos.
+        \item El servidor es \textit{sin estado}, por lo que cada solicitud contiene toda la información necesaria, facilitando la escalabilidad horizontal.\footnote{Es decir, permite añadir o retirar servidores sin necesidad de compartir sesiones en memoria.}
+        \item La uniformidad de los códigos de estado y los formatos de representación asegura que clientes heterogéneos consuman la API de manera predecible.
+        \item Herramientas como cachés, control de versiones en URLs o cabeceras, y negociación de contenido permiten evolucionar la interfaz sin afectar a los consumidores existentes.
+    \end{itemize}
+\end{itemize}
+
+En conjunto, el servidor HTTP actúa como el camino por donde viajan las solicitudes, mientras que la API RESTful establece las reglas claras y fáciles de mantener para que ese camino conecte eficientemente la lógica del servidor con los diversos clientes que dependen de ella.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Tecnologías utilizadas}
+\label{subsec:Herramientas de desarrollo}
+El desarrollo del proyecto se ha llevado a cabo en un entorno virtual Python que aísla las dependencias y permite reproducir la instalación mediante el comando \texttt{pip install -r requirements.txt}. Este enfoque asegura consistencia y portabilidad, facilitando tanto la colaboración entre desarrolladores como el despliegue en entornos diversos.
+
+\textbf{Backend.} El núcleo del backend se fundamenta en Python 3 y Flask, un micro-framework que proporciona un servidor WSGI, un sistema de enrutado eficiente y una integración fluida con el estándar HTTP. Sobre esta base, se incorpora Flask-socketIO, un middleware que habilita la negociación de WebSockets, permitiendo servir tráfico HTTP y comunicación bidireccional en el mismo puerto de manera transparente. Para la gestión de datos, se emplea SQLAlchemy a través de Flask-SQLAlchemy, lo que facilita la representación de modelos de dominio como objetos Python, mientras que SQLite actúa como una base de datos ligera y autónoma durante el desarrollo, eliminando la necesidad de un servidor externo para transacciones básicas. Este núcleo se complementa con utilidades de la librería estándar de Python, incluyendo:
+\begin{itemize}
+    \item \texttt{hashlib}, para firmar transacciones de estado mediante el algoritmo SHA-256;
+    \item \texttt{datetime}, para registrar marcas temporales en los logs.
+\end{itemize}
+
+\textbf{Frontend.} En el lado del cliente, se ha implementado un frontend estático basado en HTML5, CSS3 y JavaScript ES6, priorizando la ligereza al evitar frameworks complejos. La maquetación adaptativa se logra mediante Bootstrap 5, cargado vía CDN, y la iconografía se enriquece con Font Awesome, también distribuido por CDN. La comunicación en tiempo real se establece con el cliente Socket.IO 4.x, que conecta vía WebSocket al mismo host y puerto que Flask, mientras que las peticiones REST se realizan de forma nativa con la Fetch API, sin depender de librerías adicionales.
+
+\textbf{Herramientas de desarrollo.} El entorno de trabajo se ha centrado en Visual Studio Code como editor principal, aprovechando sus extensiones para optimizar la gestión del proyecto y el desarrollo del código. El control de versiones se ha gestionado con Git, utilizando ramas específicas para cada funcionalidad nueva, lo que asegura un desarrollo ordenado y trazable. Para las pruebas manuales de la API, se ha empleado Postman, donde se diseñó una colección de peticiones parametrizadas que serán detalladas en secciones posteriores del documento.
+
+El uso de un entorno virtual junto con dependencias consolidadas establece una base robusta para el despliegue de la aplicación en entornos más exigentes, como contenedores, nubes públicas o servidores locales, preservando la integridad de su arquitectura fundamental.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Estructura y funcionamiento}
 \label{subsubsec:EstructuraFuncionamiento}
-El servidor se diseñó para manejar solicitudes y respuestas HTTP de manera eficiente...
+El código del proyecto se estructura en dos componentes principales, \textbf{backend} y \textbf{frontend}, interconectados mediante los protocolos HTTP y WebSockets. Esta división, diseñada de manera intencionada, responde a la necesidad de lograr un desarrollo ordenado, eficiente y preparado para futuros crecimientos, considerando que trabajé en el proyecto de forma individual. Al separar el \textit{backend}, encargado de la lógica de negocio, el manejo de datos y la comunicación con el cliente, del \textit{frontend}, centrado en la interfaz de usuario y la experiencia interactiva, se obtiene una arquitectura clara y modular. Esta organización aporta múltiples ventajas: mejora la mantenibilidad al permitir identificar y corregir errores de manera localizada, simplifica la incorporación de nuevas funcionalidades sin alterar otras partes del sistema y refleja fielmente la arquitectura empleada en entornos de producción reales, lo que facilita una transición fluida hacia despliegues en contenedores, nubes públicas o servidores locales. Además, esta separación promueve la reutilización de código, ya que el \textit{backend} puede servir a múltiples clientes (como aplicaciones móviles o de escritorio) y el \textit{frontend} puede adaptarse a diferentes dispositivos sin modificar la lógica subyacente. A continuación, se describen los archivos que componen cada una de estas partes y su rol específico en el proyecto.
+
+
+
+
+
+
+
+
+
 
 \subsubsection{Protocolos y estándares implementados}
 \label{subsubsec:Protocolos}
