@@ -25,9 +25,9 @@ with app.app_context():
     # 4) "alonso" => payer
     # Contraseñas ficticias, p.ej. "1234"
     mercadona = Actor(
-        username="m",
+        username="e",
         password="1",
-        name="Mercadona S.A.",
+        name="Empresa",
         role="beneficiary",
         iban="ES26001234567890123456",
         balance=0.0
@@ -35,7 +35,7 @@ with app.app_context():
     psp_merc = Actor(
         username="pm",
         password="1",
-        name="PSP de Mercadona",
+        name="PSP de empresa",
         role="psp_beneficiary"
     )
     psp_alonso = Actor(

@@ -15,33 +15,12 @@
 \BOOKMARK [1][-]{section.3}{Dise\361o e Implementaci\363n}{}% 15
 \BOOKMARK [2][-]{subsection.3.1}{Fundamentos Te\363ricos}{section.3}% 16
 \BOOKMARK [2][-]{subsection.3.2}{Tecnolog\355as utilizadas}{section.3}% 17
-\BOOKMARK [3][-]{subsubsection.3.2.1}{Estructura y funcionamiento}{subsection.3.2}% 18
-\BOOKMARK [3][-]{subsubsection.3.2.2}{Protocolos y est\341ndares implementados}{subsection.3.2}% 19
-\BOOKMARK [2][-]{subsection.3.3}{Emulaci\363n del prototipo Request To Pay}{section.3}% 20
-\BOOKMARK [3][-]{subsubsection.3.3.1}{Dise\361o de las funcionalidades}{subsection.3.3}% 21
-\BOOKMARK [3][-]{subsubsection.3.3.2}{Modelos de procesamiento de solicitudes}{subsection.3.3}% 22
-\BOOKMARK [2][-]{subsection.3.4}{Herramientas de desarrollo}{section.3}% 23
-\BOOKMARK [3][-]{subsubsection.3.4.1}{Lenguajes y frameworks}{subsection.3.4}% 24
-\BOOKMARK [3][-]{subsubsection.3.4.2}{Pruebas y validaci\363n}{subsection.3.4}% 25
-\BOOKMARK [1][-]{section.4}{M\351todos}{}% 26
-\BOOKMARK [2][-]{subsection.4.1}{Preparaci\363n de los datos de entrada}{section.4}% 27
-\BOOKMARK [3][-]{subsubsection.4.1.1}{Simulaci\363n de solicitudes HTTP}{subsection.4.1}% 28
-\BOOKMARK [3][-]{subsubsection.4.1.2}{Configuraci\363n de escenarios de prueba}{subsection.4.1}% 29
-\BOOKMARK [2][-]{subsection.4.2}{Evaluaci\363n del sistema}{section.4}% 30
-\BOOKMARK [3][-]{subsubsection.4.2.1}{M\351tricas de rendimiento}{subsection.4.2}% 31
-\BOOKMARK [3][-]{subsubsection.4.2.2}{Dise\361o de pruebas}{subsection.4.2}% 32
-\BOOKMARK [3][-]{subsubsection.4.2.3}{An\341lisis de resultados}{subsection.4.2}% 33
-\BOOKMARK [2][-]{subsection.4.3}{Optimizaci\363n del servidor}{section.4}% 34
-\BOOKMARK [2][-]{subsection.4.4}{Validaci\363n cruzada de la implementaci\363n}{section.4}% 35
-\BOOKMARK [1][-]{section.5}{Resultados y discusi\363n}{}% 36
-\BOOKMARK [2][-]{subsection.5.1}{Presentaci\363n de los resultados}{section.5}% 37
-\BOOKMARK [3][-]{subsubsection.5.1.1}{Comparativa con los est\341ndares del EPC}{subsection.5.1}% 38
-\BOOKMARK [3][-]{subsubsection.5.1.2}{An\341lisis de casos de uso}{subsection.5.1}% 39
-\BOOKMARK [2][-]{subsection.5.2}{Discusi\363n de los resultados}{section.5}% 40
-\BOOKMARK [1][-]{section.6}{Conclusiones y l\355neas futuras}{}% 41
-\BOOKMARK [2][-]{subsection.6.1}{Conclusiones}{section.6}% 42
-\BOOKMARK [2][-]{subsection.6.2}{Limitaciones y L\355neas Futuras}{section.6}% 43
-\BOOKMARK [1][-]{appendix.A}{C\363digos}{}% 44
-\BOOKMARK [1][-]{section*.11}{\315ndice de Figuras}{}% 45
-\BOOKMARK [1][-]{section*.12}{\315ndice de Tablas}{}% 46
-\BOOKMARK [1][-]{section*.13}{\315ndice de C\363digos}{}% 47
+\BOOKMARK [2][-]{subsection.3.3}{Estructura y funcionamiento}{section.3}% 18
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Backend}{subsection.3.3}% 19
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Frontend}{subsection.3.3}% 20
+\BOOKMARK [2][-]{subsection.3.4}{Emulaci\363n del prototipo Request To Pay}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.5}{Pruebas y validaci\363n}{section.3}% 22
+\BOOKMARK [1][-]{appendix.A}{C\363digos}{}% 23
+\BOOKMARK [1][-]{section*.11}{\315ndice de Figuras}{}% 24
+\BOOKMARK [1][-]{section*.12}{\315ndice de Tablas}{}% 25
+\BOOKMARK [1][-]{section*.13}{\315ndice de C\363digos}{}% 26
