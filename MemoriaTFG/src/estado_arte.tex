@@ -12,21 +12,21 @@
 El ecosistema europeo de pagos ha experimentado una profunda transformación en las últimas décadas, pasando de sistemas nacionales heterogéneos a un marco unificado bajo la iniciativa \textbf{SEPA}. Antes de SEPA, cada país operaba infraestructuras y normas propias para transferencias bancarias y adeudos, lo que complicaba los pagos transfronterizos dentro de Europa.  
 Con la introducción del euro y el objetivo de un mercado único, surgió la necesidad de armonizar los instrumentos de pago. El Consejo Europeo impulsó la creación de SEPA a través del Reglamento (UE)~\num{260}/\num{2012}, que fijó la migración obligatoria a los nuevos esquemas paneuropeos de transferencia y adeudo en fechas límite (febrero de 2014 para la zona euro).  
 
-Así, en \textit{2008} se lanzó el esquema \textbf{SEPA Credit Transfer} (\textbf{SCT}) para transferencias de crédito en euros, y en \textit{2009} el \textbf{SEPA Direct Debit} (\textbf{SDD}) para adeudos domiciliados\,\cite{Numeral2022}. Estos esquemas sustituyeron progresivamente a los medios nacionales, unificando formatos (por ejemplo, el uso obligatorio de \emph{IBAN}) y reglas de funcionamiento en todos los países SEPA. Posteriormente, para atender las demandas de inmediatez, la transferencia instantánea \textbf{SCT~Inst} (\emph{SEPA Instant Credit Transfer}) entró en funcionamiento en \textit{2017}, permitiendo abonar al beneficiario en menos de \SI{10}{\second}. La implantación de SCT~Inst ha sido voluntaria hasta ahora, aunque recientemente la UE ha aprobado su obligatoriedad progresiva en 2025 para acelerar su adopción\,\cite{CBI2024}.  
+Así, en \textit{2008} se lanzó el esquema \textbf{SEPA Credit Transfer} (\textbf{SCT}) para transferencias de crédito en euros, y en \textit{2009} el \textbf{SEPA Direct Debit} (\textbf{SDD}) para adeudos domiciliados. Estos esquemas sustituyeron progresivamente a los medios nacionales, unificando formatos (por ejemplo, el uso obligatorio de \emph{IBAN}) y reglas de funcionamiento en todos los países SEPA. Posteriormente, para atender las demandas de inmediatez, la transferencia instantánea \textbf{SCT~Inst} (\emph{SEPA Instant Credit Transfer}) entró en funcionamiento en \textit{2017}, permitiendo abonar al beneficiario en menos de \SI{10}{\second}. La implantación de SCT~Inst ha sido voluntaria hasta ahora, aunque recientemente la UE ha aprobado su obligatoriedad progresiva en 2025 para acelerar su adopción.  
 
-En la actualidad, los esquemas SEPA (transferencias estándar e inmediatas, adeudos básicos y B2B) concentran la mayoría de pagos bancarios en euros dentro de Europa\,\cite{Numeral2022}. Este salto hacia la unificación de pagos fue liderado por la propia industria bancaria europea. En \textit{2002} los bancos constituyeron el \textbf{European Payments Council} (EPC), órgano de autorregulación que diseña y gestiona los esquemas SEPA. El EPC publicó las primeras \emph{rulebooks} de SCT y SDD en 2008–2009, estableciendo estándares comunes de mensaje (\emph{ISO~20022}\footnote{ISO~20022: estándar internacional para el intercambio de mensajes financieros, basado en XML, empleado en los esquemas SEPA para definir las estructuras de datos de transferencias, adeudos, etc.}) y calendarios de liquidación. Cabe destacar que el EPC no es un organismo legislativo de la UE ni un regulador, sino una asociación del sector bancario que actúa de facto como ente normalizador: especifica las reglas de los esquemas utilizados por los \textbf{PSP} (\emph{Payment Service Providers} o proveedores de servicios de pago) y coopera con los bancos centrales para operar las infraestructuras de compensación\,\cite{Numeral2022}. Gracias a esta colaboración público-privada, a partir de \textit{2014} se completó con éxito la migración de millones de pagos nacionales al formato SEPA, eliminando diferencias entre pagos domésticos y transfronterizos en euros.
+En la actualidad, los esquemas SEPA (transferencias estándar e inmediatas, adeudos básicos y B2B) concentran la mayoría de pagos bancarios en euros dentro de Europa. Este salto hacia la unificación de pagos fue liderado por la propia industria bancaria europea. En \textit{2002} los bancos constituyeron el \textbf{European Payments Council} (EPC), órgano de autorregulación que diseña y gestiona los esquemas SEPA. El EPC publicó las primeras \emph{rulebooks} de SCT y SDD en 2008–2009, estableciendo estándares comunes de mensaje (\emph{ISO~20022}\footnote{ISO~20022: estándar internacional para el intercambio de mensajes financieros, basado en XML, empleado en los esquemas SEPA para definir las estructuras de datos de transferencias, adeudos, etc.}) y calendarios de liquidación. Cabe destacar que el EPC no es un organismo legislativo de la UE ni un regulador, sino una asociación del sector bancario que actúa de facto como ente normalizador: especifica las reglas de los esquemas utilizados por los \textbf{PSP} (\emph{Payment Service Providers} o proveedores de servicios de pago) y coopera con los bancos centrales para operar las infraestructuras de compensación. Gracias a esta colaboración público-privada, a partir de \textit{2014} se completó con éxito la migración de millones de pagos nacionales al formato SEPA, eliminando diferencias entre pagos domésticos y transfronterizos en euros.
 
 \subsection{El papel del EPC en la estandarización y el surgimiento de Request-to-Pay}
 \label{subsec:epc-rtp}
 
-El \textbf{European Payments Council (EPC)} ha desempeñado un rol central en la estandarización de los instrumentos de pago SEPA. Tras la implementación de SCT y SDD, el EPC continuó explorando mejoras para la era digital, en línea con las iniciativas del Eurosistema para fomentar pagos electrónicos paneuropeos más eficientes. En noviembre de 2018, el \emph{Euro Retail Payments Board} (\textbf{ERPB})\footnote{ERPB: foro de alto nivel presidido por el BCE que reúne a autoridades y sector financiero para impulsar la integración y modernización de los pagos minoristas en Europa.} —órgano del BCE que orienta la estrategia de pagos minoristas— lanzó un llamado a la acción para desarrollar el concepto de \emph{Request to Pay} (R2P) como nuevo servicio en la zona SEPA\,\cite{EBACLEARING2020}.  
+El \textbf{European Payments Council (EPC)} ha desempeñado un rol central en la estandarización de los instrumentos de pago SEPA. Tras la implementación de SCT y SDD, el EPC continuó explorando mejoras para la era digital, en línea con las iniciativas del Eurosistema para fomentar pagos electrónicos paneuropeos más eficientes. En noviembre de 2018, el \emph{Euro Retail Payments Board} (\textbf{ERPB})\footnote{ERPB: foro de alto nivel presidido por el BCE que reúne a autoridades y sector financiero para impulsar la integración y modernización de los pagos minoristas en Europa.} —órgano del BCE que orienta la estrategia de pagos minoristas— lanzó un llamado a la acción para desarrollar el concepto de \emph{Request to Pay} (R2P) como nuevo servicio en la zona SEPA.  
 
-Atendiendo esta petición, el EPC creó un grupo de trabajo y comenzó a diseñar un esquema formal de Request to Pay durante 2019–2020. Tras una consulta pública, en noviembre de 2020 se publicó el primer \emph{SRTP Scheme Rulebook} (versión 1.0) y se abrió el registro de participantes. El esquema \textbf{SEPA Request-to-Pay (SRTP)} entró en vigor el \textit{15 de junio de 2021}, marcando un hito en la evolución de SEPA más allá de los instrumentos tradicionales\,\cite{EBACLEARING2020}. Al igual que SCT~Inst, la adhesión al esquema RTP es voluntaria; sin embargo, su desarrollo cuenta con fuerte apoyo institucional al considerarse un potenciador de los pagos instantáneos y digitales en Europa. El EPC continúa gestionando y actualizando el esquema (versión 4.0 en 2023), con la expectativa de que Request-to-Pay se integre gradualmente como componente clave del panorama de pagos europeos.
+Atendiendo esta petición, el EPC creó un grupo de trabajo y comenzó a diseñar un esquema formal de Request to Pay durante 2019–2020. Tras una consulta pública, en noviembre de 2020 se publicó el primer \emph{SRTP Scheme Rulebook} (versión 1.0) y se abrió el registro de participantes. El esquema \textbf{SEPA Request-to-Pay (SRTP)} entró en vigor el \textit{15 de junio de 2021}, marcando un hito en la evolución de SEPA más allá de los instrumentos tradicionales. Al igual que SCT~Inst, la adhesión al esquema RTP es voluntaria; sin embargo, su desarrollo cuenta con fuerte apoyo institucional al considerarse un potenciador de los pagos instantáneos y digitales en Europa. El EPC continúa gestionando y actualizando el esquema (versión 4.0 en 2023), con la expectativa de que Request-to-Pay se integre gradualmente como componente clave del panorama de pagos europeos.
 
 \subsection{Funcionamiento técnico de SEPA Request-to-Pay (SRTP)}
 \label{subsec:funcionamiento-srtp}
 
-\textbf{Request-to-Pay (RTP)} es un servicio de mensajería financiera que actúa como capa de solicitud previa al pago. A diferencia de los instrumentos tradicionales (transferencias o adeudos) que mueven fondos, RTP no mueve dinero por sí mismo: permite a un beneficiario (\emph{Payee}) enviar electrónicamente una solicitud de pago a un pagador (\emph{Payer}), quien puede aceptarla o rechazarla antes de iniciarse la transacción monetaria\,\cite{EBACLEARING2020}. El servicio funciona \emph{24 × 7} y añade al flujo de pago un intercambio estructurado de datos (importe, concepto, vencimiento, identidad de las partes, etc.) previo al envío de fondos.  
+\textbf{Request-to-Pay (RTP)} es un servicio de mensajería financiera que actúa como capa de solicitud previa al pago. A diferencia de los instrumentos tradicionales (transferencias o adeudos) que mueven fondos, RTP no mueve dinero por sí mismo: permite a un beneficiario (\emph{Payee}) enviar electrónicamente una solicitud de pago a un pagador (\emph{Payer}), quien puede aceptarla o rechazarla antes de iniciarse la transacción monetaria. El servicio funciona \emph{24 × 7} y añade al flujo de pago un intercambio estructurado de datos (importe, concepto, vencimiento, identidad de las partes, etc.) previo al envío de fondos.  
 
 Los mensajes SRTP viajan en tiempo real formateados según ISO~20022\footnote{Las mensajes SRTP siguen las definiciones ISO~20022 específicas del esquema, permitiendo interoperabilidad con mensajes de pago \texttt{pacs}/\texttt{pain} de SCT/SCT~Inst.}, lo que facilita su integración con las plataformas SEPA existentes.
 
@@ -41,47 +41,54 @@ Los mensajes SRTP viajan en tiempo real formateados según ISO~20022\footnote{La
 
 \begin{table}[htbp]
   \centering
+  \renewcommand{\arraystretch}{1.2} % aumenta un poco la altura de las filas
   \caption{Pasos del flujo del esquema SEPA Request-to-Pay (SRTP) y su descripción}
-  \label{tab:srtp-steps}
-  \begin{tabularx}{\textwidth}{
-    @{} 
-    >{\raggedright\arraybackslash}p{0.25\textwidth}  % columna fija, alineada a la izquierda
-    >{\raggedright\arraybackslash}X                  % columna flexible, alineada a la izquierda
-    @{}
-  }
+  \label{tab:srtp-steps-a}
+  \begin{tabularx}{\textwidth}{@{} >{\bfseries}l  X @{}}
     \toprule
-    \textbf{Paso} & \textbf{Descripción} \\
+    Paso  & Descripción \\
     \midrule
     1.\ Identificación
-      & Una primera interacción que permite establecer la comunicación entre pagador y beneficiario a través de sus PSP. \\
-    2.\ Envío SRTP al PSP del beneficiario
-      & El beneficiario envía la SRTP a su propio proveedor de servicios. Este mensaje contiene todos los datos esenciales del esquema RTP. \\
-    3.\ Envío SRTP al PSP del pagador
-      & El PSP del beneficiario retransmite la SRTP al PSP del pagador. \\
-    4.\ Presentación SRTP al pagador
-      & La SRTP se muestra al pagador en el canal o dispositivo acordado (aplicación móvil, navegador web, etc.). \\
+      & Una primera interacción que establece la comunicación entre pagador y beneficiario. \\
+    2.\ Envío de la SRTP al PSP del beneficiario
+      & El beneficiario envía la solicitud de pago SRTP a su PSP, incluyendo todos los datos esenciales del esquema (importe, concepto, vencimiento…). \\
+    3.\ Transmisión al PSP del pagador
+      & El PSP del beneficiario reenvía la SRTP al PSP del pagador. \\
+    4.\ Presentación al pagador
+      & La solicitud se muestra al pagador en el canal acordado (app móvil, web, etc.), permitiendo que revise los detalles. \\
     5.\ Informe de estado
-      & La aceptación o el rechazo de la SRTP por parte del pagador se envía de vuelta al beneficiario a través de sus respectivos PSP. \\
+      & El resultado (aceptación o rechazo) se comunica de vuelta al beneficiario mediante los PSP correspondientes. \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-El Operational Scheme Manager (OSM) es la pieza operativa que el EPC ha previsto para ofrecer un servicio centralizado de directorio -el EPC Directory Service (EDS) que facilite la interoperabilidad y el alcance mutuo entre los participantes del esquema SRTP.
-La OSM actúa como registro autorizado de todos los PSP y demás actores adheridos al esquema y su misión es garantizas que, en todo momento, cualquier PSP pueda localizar el "endpoint" correcto del PSP objetivo, verificar que está homologado y enviar de forma segura los mensajes SRTP.
-Por tanto, para que un PSP pase a formar parte activa del esquema SEPA Request-to-Pay deberá en primer lugar superar con éxito las pruebas de conformidad ISO 20022 y obtener la homologación técnica, tras lo cual acceder al portal de la Operational Scheme Manager para registrar su ficha operativa —incluyendo URL de endpoint, roles SRTP, certificados TLS, claves de firma y datos de contacto 24×7— y aceptar los términos de uso del EPC Directory Service, de modo que la OSM valide la disponibilidad y correcta respuesta de sus endpoints y publique la información correspondiente en el EDS público, quedando accesible al resto de participantes; finalmente, el PSP actualiza sus canales de banca electrónica y/o sus APIs de iniciación de pagos para presentar las solicitudes RTP a sus usuarios, garantizar la autenticación fuerte conforme a PSD2 y gestionar de forma integrada los flujos de aceptación, rechazo y cancelación\paragraph{Flujo básico.}  
+La Operational Scheme Manager (OSM) es el elemento central que mantiene vivo y accesible a todo el ecosistema SRTP. Es un gran directorio seguro y siempre actualizado, gestionado por el EPC, donde quedan registrados todos los PSP y demás actores autorizados: sus identificadores, los certificados TLS que usan para cifrar las comunicaciones, las claves de firma y las URLs de sus endpoints(puntos finales de API donde se reciben y se envían RTP). Gracias a la OSM, cada PSP puede, en cualquier momento, localizar de forma sencilla y confiable a otro PSP: comprueba automáticamente que el receptor está homologado, que su endpoint está operativo, y que la conexión será segura antes de intercambiar solicitudes o respuestas de pago.
+
+Su misión va más allá de un simple directorio estático: la OSM supervisa y valida de forma continua la disponibilidad y el correcto funcionamiento de todos los endpoints adheridos, publica esta información en el EPC Directory Service (EDS) y notifica de inmediato cualquier incidencia. De este modo, se garantiza que las transacciones RTP fluyan sin interrupciones, con altos estándares de seguridad y cumplimiento de ISO 20022, y que todos los participantes puedan interoperar con total confianza.
+
+En este TFG no se va a simular ni modelar este registro previo en la OSM, asumiremos que todos los actores se encuentran correctamente dados de alta en el directorio. Así, podremos centrarnos exclusivamente en las dinámicas de la solicitud, aceptación, rechazo yu cancelación de pagos, dando por hecho que el acceso a los endpoints y la homologación técnica ya están resueltos.
+
 El flujo básico de un intercambio RPT es el aiguiente:
 \newpage
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.95\textwidth, height=0.95\textheight, keepaspectratio]{Imagenes/Flujo.png}
-  \label{fig:4corner}
+  \label{fig:Flujo}
 \end{figure}
 
+\newcolumntype{L}[1]{%
+  >{\setlength\parindent{1em}% sangría primera línea
+    \raggedright\arraybackslash}%
+  p{#1}%
+}
 
 \setlength{\tabcolsep}{10pt}
 \renewcommand{\arraystretch}{1.5}
-\begin{longtable}{|p{3cm}|p{12cm}|}
+\begin{longtable}{|L{3cm}|p{12cm}|}
+  \caption[Pasos del esquema SRTP]{Pasos del flujo del esquema SRTP y su descripción}
+  \label{tab:srtp-steps-b} \\
+
   \hline
   \textbf{Paso/Función} & \textbf{Descripción} \\
   \hline
@@ -271,11 +278,11 @@ El \textbf{SEPA Request-to-Pay} se concibió como un servicio versátil, capaz d
 \subsection{RTP dentro del ecosistema de pagos: arquitectura en capas}
 \label{subsec:cubo-pagos}
 
-El ecosistema de pagos SEPA (Zona Única de Pagos en Euros) se puede describir mediante capas jerárquicas, desde los usuarios finales hasta las infraestructuras financieras que ejecutan las transacciones. A continuación se detallan las principales capas del modelo actual de pagos SEPA:
+El ecosistema de pagos SEPA se puede describir mediante capas jerárquicas, desde los usuarios finales hasta las infraestructuras financieras que ejecutan las transacciones. A continuación se detallan las principales capas del modelo actual de pagos SEPA:
 
 \begin{description}
   \item[\textbf{Capa de usuarios finales}] 
-    En la capa más alta se encuentran el \emph{pagador} (ordenante del pago) y el \emph{beneficiario} (cobrador). Son quienes inician y reciben los pagos, respectivamente, ya sea personas o empresas involucradas en una transacción.
+    En la capa más alta se encuentran el \emph{pagador} y el \emph{beneficiario}. Son quienes inician y reciben los pagos, respectivamente, ya sea personas o empresas involucradas en una transacción.
 
   \item[\textbf{Capa de iniciación o interacción}] 
     Es donde se produce la solicitud o autorización del pago a través de algún canal o interfaz. Por ejemplo, en pagos SEPA tradicionales el pagador suele autorizar una transferencia mediante la banca online o una aplicación móvil. En entornos de comercio electrónico o físico, esta capa correspondería al proceso de \emph{checkout} (por ejemplo, introduciendo datos en una pasarela de pago online o mediante un TPV/POS en tienda).
@@ -287,7 +294,7 @@ El ecosistema de pagos SEPA (Zona Única de Pagos en Euros) se puede describir m
     Es el conjunto de reglas y estándares comunes que permiten la interoperabilidad entre todos los PSP. En SEPA, por ejemplo, existen los esquemas de transferencia crediticia (SCT, SCT Inst) y adeudo directo (SDD), definidos por el European Payments Council (EPC). Cada esquema asegura que, independientemente del banco involucrado, un pago en euros siga las mismas normas y formatos. Un esquema de pago no es el movimiento del dinero en sí, sino el conjunto de reglas, mensajes e infraestructura técnica que orquesta cómo se inician y gestionan esos pagos.
 
   \item[\textbf{Capa de infraestructuras de compensación}] 
-    Son las plataformas interbancarias que procesan las transacciones según las reglas del esquema. En SEPA, existen cámaras de compensación automatizadas (CSM) y redes de pago instantáneo. Por ejemplo, el sistema STEP2 de EBA Clearing procesa transferencias SEPA diarias, mientras que para pagos instantáneos existen redes 24/7 como TIPS (del BCE) o RT1 (de EBA Clearing). Estas infraestructuras se encargan de intercambiar las órdenes de pago entre el banco emisor y el banco receptor, aplicando compensación multilateral si procede.
+    Son las plataformas interbancarias que procesan las transacciones según las reglas del esquema. Estas infraestructuras se encargan de intercambiar las órdenes de pago entre el banco emisor y el banco receptor, aplicando compensación multilateral si procede.
 
   \item[\textbf{Capa de liquidación}] 
     Es la capa más baja, donde se realiza la liquidación final de fondos entre bancos. Normalmente ocurre en los bancos centrales u organismos de compensación: por ejemplo, las obligaciones netas resultantes de muchas transacciones SEPA pueden liquidarse en TARGET2 (sistema del Banco Central Europeo). En pagos inmediatos, la liquidación suele ser casi en tiempo real (por ejemplo, mediante TIPS que liquida cada operación al momento en cuentas del banco central).
@@ -297,7 +304,7 @@ El ecosistema de pagos SEPA (Zona Única de Pagos en Euros) se puede describir m
   \centering
   \includegraphics[width=0.5\textwidth]{Imagenes/esq1.png}
   \caption{Layer}
-  \label{fig:4corner}
+  \label{fig:Esquema por capas}
 \end{figure}
 
 Esta arquitectura por capas garantiza que un pago iniciado por un usuario en un banco pueda llegar a otro usuario en distinto banco de forma segura, eficiente e interoperable en toda la zona euro. Cada capa agrega funciones específicas: los usuarios generan órdenes, los PSP las gestionan, los esquemas proporcionan las reglas comunes, y las infraestructuras las ejecutan y asientan los fondos en última instancia.
@@ -330,7 +337,7 @@ Como muestra el esquema comparativo, los pagos con tarjeta (ej.\ Visa/Mastercard
   \centering
   \includegraphics[width=0.8\textwidth]{Imagenes/LayerComp.png}
   \caption{LayerComp}
-  \label{fig:4corner}
+  \label{fig:Esquema por capas comparación}
 \end{figure}
 
 \bigskip

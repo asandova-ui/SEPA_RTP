@@ -14,6 +14,7 @@
 \usepackage{booktabs}
 \usepackage{footnote}          % <— nuevo
 \usepackage{siunitx}
+\usepackage{inputenc}
 \usepackage{threeparttable}
 \usepackage{tikz}       % Diagrama en capas (cubo)
 \usepackage{footmisc}   % Mejor gestión de notas a pie de página (opcional)
@@ -47,7 +48,11 @@
 }
 
 
-
+\newcolumntype{L}[1]{%
+  >{\setlength\parindent{1em}% sangría primera línea
+    \raggedright\arraybackslash}%
+  p{#1}%
+}
 
 \begin{document}
 
@@ -66,13 +71,14 @@
     \vspace{0.5cm}
     {\scshape Grado en Ingeniería de Tecnologías de Telecomunicación \par}
     \vspace{0.5cm}
-    {\bfseries\scshape\Large Implementación de un Servidor HTTP para Emular un Prototipo del Sistema Request To Pay del EPC \par}
+    {\bfseries\scshape\Large Request To Pay frente a la domiciliación bancaria: propuesta de mejora e implementación de un prototipo. \par}
     \vspace{1.5cm}
-    { Autor: Alonso\\}
-    { Sandoval Martínez \par}
-    { Tutores:\\}
-    { D. Tutor1 \\ D. Tutor2 \par}
-    \vspace{0.5cm} {Valladolid, MES 202X \par}
+    { Autor: \\}
+    { Alonso Sandoval Martínez }\\
+    \vspace{0.5cm}
+    { Tutor:\\}
+    { Federico Simmross Wattenberg }\\
+    \vspace{1.5cm} {Valladolid, junio 2025 \par}
 \end{titlepage}
 
 % Configurando el idioma
@@ -88,13 +94,7 @@
 
 % Añadiendo el resumen en español
 \newpage
-\phantomsection
-\addcontentsline{toc}{section}{Resumen}
-\begin{abstract}
-    Este trabajo presenta la implementación de Como se muestra en \cite{smith2020iapago}, el protocolo SEPA permite...
-    un servidor HTTP para emular un prototipo del sistema Request To Pay desarrollado por el European Payments Council (EPC), abordando...
-\end{abstract}
-\noindent {\small \textbf{\textit{Palabras clave---}} Servidor HTTP, Request To Pay, EPC, Telecomunicaciones, Pagos Electrónicos}
+\input{src/resumen.tex}
 
 % Volviendo al español para el resto del documento
 \selectlanguage{spanish} 
@@ -120,15 +120,11 @@
 % 5. Resultados y discusión
 %\input{src/resultados.tex}
 \newpage
-% 6. Conclusiones y líneas futuras
-%\input{src/conclusiones.tex}
+\input{src/conclusiones.tex}
 \newpage
 % Añadiendo los apéndices
 \clearpage
-\appendix
-\section{Códigos}
-\label{sec:apendice}
-    \lstinputlisting[caption={Código de ejemplo.}, captionpos=b]{Codes/Example.m}
+
 
 % Añadiendo las referencias
 \clearpage

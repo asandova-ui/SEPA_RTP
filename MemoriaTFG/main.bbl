@@ -1,3 +1,15 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{Cou23b}
+
+\bibitem[Cou23a]{epc137}
+E.~P. Council.
+\newblock {EPC137 - SRTP Implementation Guidelines}, 2023.
+
+\bibitem[Cou23b]{epc164}
+E.~P. Council.
+\newblock {EPC164 - API Security Framework}, 2023.
+
+\bibitem[Cou25]{epc014}
+E.~P. Council.
+\newblock {SRTP Scheme Rulebook v4.0}, 2025.
 
 \end{thebibliography}

@@ -73,7 +73,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
         Tras ejecutarlo basta con poner "http://127.0.0.1:5000"     en el buscador para conectarnos al servidor.
 
 
-        \begin{lstlisting}[language=Python, style=custom]
+        \begin{lstlisting}[language=Python, style=custom, caption={Configuración y arranque del servidor Flask-SocketIO}]
             STATIC_FOLDER = os.path.join(os.path.dirname(__file__), '../frontend')
             app = Flask(__name__, static_folder=STATIC_FOLDER)
             app.config.from_object(Config)
@@ -106,7 +106,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
         \end{lstlisting}
 
     \item \textbf{config.py} contiene la configuración: URI de SQLite y parámetro para desactivar el tracker de SQLAlchemy. Facilita cambiar de motor BD en modificaciones futuras solamente cambiando esta clase.
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Configuración SQLAlchemy y SQLite}]
                 basedir = os.path.abspath(os.path.dirname(__file__))
 
                 class Config:
@@ -117,10 +117,10 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
 
     \item \textbf{models.py} define el modelo de datos que se va utilizar y contiene un ORM\footnote{Object-Relational Mapping} para interactuar con una base de datos relacional. Aquí definimos tres clases principales que representan tablas en la base de datos: Actor, RTP y log.
             Esto se hace así para mayor facilidad a la hora de realizar operaciones como crear, leer, actualizar y eliminar registros.
-            Cada una de estas clases corresponde con una tabla en la base de datos y cada atributo de cada clase con una columna de su tabla correspondiente. Además se incluye un método to_dict para serializar los datos a formato JSON para enviarlos a través de una API.
+            Cada una de estas clases corresponde con una tabla en la base de datos y cada atributo de cada clase con una columna de su tabla correspondiente. Además se incluye un método todict para serializar los datos a formato JSON para enviarlos a través de una API.
             A continuacion se muestra únicamente una de las 3 clases ya que ambas tienen la misma estructura.
 
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Modelo ORM + clase Actor}]
                     from flask_sqlalchemy import SQLAlchemy
 
                     db = SQLAlchemy()
@@ -156,9 +156,9 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
 
                 \end{lstlisting}
 
-    \item \textbf{utils.py} agrega métodos auxiliares que son llamados desde otros ficheros. Son métodos de utilidad y se han puesto en este fichero con el objetivo de no sobrecargar los ficheros principales. Algunas de las funcionalidades que incluye son "cambiar_esatdo_rtp", "rechazar_rtp" o "validar_iban".
+    \item \textbf{utils.py} agrega métodos auxiliares que son llamados desde otros ficheros. Son métodos de utilidad y se han puesto en este fichero con el objetivo de no sobrecargar los ficheros principales. Algunas de las funcionalidades que incluye son "cambiar\_esatdo_rtp", "rechazar\_rtp" o "validar\_iban".
 
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Funciones utilitarias}]
                 def cambiar_estado_rtp(db, rtp_obj, new_status):
                 old_status = rtp_obj.status
                 rtp_obj.status = new_status
@@ -199,7 +199,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
     \item \textbf{utils roles.py} contiene el decorador rolerequired que inspecciona el actorid recibido en el cuerpo JSON y bloquea la ruta si el rol no coincide con el requerido.
             De esta manera se asegura de cada actor tenga acceso a sus propias funciones.
 
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Decorador para control de funciones}]
                 def role_required(required_role):
                 """
                 Decorador que verifica que el actor que invoca el endpoint
@@ -236,11 +236,11 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
 
             A cada uno de estos endpoints le corresponde su fichero o apartado .html que veremos en posteriores apartados del documento.
             
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Declaración blueprint rtp}]
                 rtp_blueprint = Blueprint('rtp', __name__)
             \end{lstlisting}
 
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Endpoint login}]
                 @rtp_blueprint.route('/login', methods=['POST'])
                 def login():
                     data = request.get_json()
@@ -265,7 +265,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
                     })
             \end{lstlisting}
 
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Endpoint profile}]
                     @rtp_blueprint.route('/profile', methods=['POST'])
                     @role_required('payer')
                     def update_profile():
@@ -293,7 +293,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
             \end{lstlisting}
 
     \item \textbf{routes actors.py} contiene un pequeño blueprint aparte para el alta de actores, esto se ha hecho así para demostrar cómo escalar la API sin engordar el fichero principal.
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Declaración blueprint actores}]
                 actors_blueprint = Blueprint('actors', __name__)
 
                 @actors_blueprint.route('/actors', methods=['POST'])
@@ -320,7 +320,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
 
     \item \textbf{ext socketio.py} simplemente es un fichero de conveniencia que crea la instancia soccketIO.
             Separar la instancia de Socket.IO en un fichero independiente permite mantener una arquitectura limpia y flexible: evita importaciones circulares entre módulo, se integra sin fricción en el patrón application factory de Flask al poder llamarse luego socketio.initapp desde app.py. Así centralizamos en un único punto la configuración o el cambio de motor de concurrencia facilitando la escalabilidad.
-            \begin{lstlisting}[language=Python, style=custom]
+            \begin{lstlisting}[language=Python, style=custom, caption={Instancia global de socketIO}]
                 from flask_socketio import SocketIO, join_room, emit
 
                 socketio = SocketIO()
@@ -454,7 +454,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 1. Endpoint HTTP (routes.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Endpoint creación de solicitud RTP}]
             @rtp_blueprint.route('/rtp', methods=['POST'])
             @role_required('beneficiary')
             def crear_rtp():
@@ -494,7 +494,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 2. Lógica de negocio (services.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Servicio de negocio creacion RTP}]
 
             def crear_rtp_service(data):
                 beneficiary_id = data.get('actor_id')
@@ -573,7 +573,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 1. Endpoints HTTP (routes.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Endpoints para validación y enrutado}]
             @rtp_blueprint.route('/rtp/<int:rtp_id>/validate-beneficiary', methods=['POST'])
             @role_required('psp_beneficiary')
             def validar_beneficiario(rtp_id):
@@ -609,7 +609,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 2. Lógica de negocio (services.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Servicio de negocio validación y enrutado}]
             def validar_beneficiario_service(rtp_id):
                 rtp_obj = RTP.query.get(rtp_id)
                 if not rtp_obj:
@@ -677,7 +677,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 1. Ruta HTTP (routes.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Endpoint validación pagador}]
             @rtp_blueprint.route('/rtp/<int:rtp_id>/validate-payer', methods=['POST'])
             @role_required('psp_payer')
             def validar_payer(rtp_id):
@@ -698,7 +698,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 2. Lógica de negocio (services.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Servicio de negocio validación pagador}]
             def validar_payer_service(rtp_id):
                 """
                 Validación por el PSP del pagador.
@@ -719,7 +719,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
                     # Rechazo inmediato por falta de fondos
                     return rechazar_rtp(db, rtp_obj, "Saldo insuficiente (PSP forzó cancelación)")
 
-                # Fondos suficientes → validación satisfactoria
+                # Fondos suficientes implica validación satisfactoria
                 result = cambiar_estado_rtp(db, rtp_obj, "validado_payer")
 
                 # Notificación al pagador (front-end) para que tome su decisión final
@@ -759,7 +759,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 1. Ruta HTTP (routes.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Endpoint decisión final}]
             @rtp_blueprint.route('/rtp/<int:rtp_id>/decision', methods=['POST'])
             @role_required('payer')
             def decision_payer(rtp_id):
@@ -783,7 +783,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         %---------------------------------------------------------------
         % 2. Lógica de negocio (services.py)
         %---------------------------------------------------------------
-       \begin{lstlisting}[language=Python, style=custom]
+       \begin{lstlisting}[language=Python, style=custom, caption={Servicio de negocio decisión final}]
             def decision_payer_service(rtp_id, data):
                 """
                 Decisión final del pagador: 'aceptado' o 'rechazado'.
@@ -898,9 +898,9 @@ Durante las primeras fases del desarollo se creó una coleccion de peticiones qu
   \label{fig:RunResults}
 \end{figure}
 
-Las peticiones relevantes del flujo son:
+Las peticiones relevantes del flujo  son:
 
-\begin enumerate
+\begin{enumerate}
 \item \textbf{Creación RTP}
     \begin{figure}[H]
     \centering
@@ -975,4 +975,41 @@ Las peticiones relevantes del flujo son:
     \includegraphics[width=0.8\textwidth]{Imagenes/decisionResponse.png}
     \caption{decisionResponse}
     \label{fig:decisionResponse}
+    \end{figure}
+\end{enumerate}
+
+Hay ocasiones en las que el flujo no va a completarse debido a errores o rechazos:
+
+Si al crear el RTP el IBAN no corresponde con ningún cliente regitrado en el esquema RTP o no cumple la normativa ISO 13616\footnote{Esta norma internacional define la estructura del IBAN: ES + 2 dígitos de control + 20 dígitos del número de cuenta}
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/error1.png}
+    \caption{error1}
+    \label{fig:error1}
+    \end{figure}
+
+Si se crea un RTP con importe mayor al que el pagador puede hacer frente, el RTP llegará hasta el PSP del pagador, quien tras comprobar el importe, lo rechazará.
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/error2_1.png}
+    \caption{error2\_1}
+    \label{fig:error2_1}
+    \end{figure}
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/error2_2.png}
+    \caption{error2\_2}
+    \label{fig:error2_2}
+    \end{figure}
+
+Cuando se crea un RTP deben existir los cuatro actores involucrados o de lo contrario también dará un error:
+
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Imagenes/error3.png}
+    \caption{error3}
+    \label{fig:error3}
     \end{figure}

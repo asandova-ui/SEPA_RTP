@@ -3,53 +3,45 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: castellano2.bst
 Database file #1: bibliografia.bib
-Warning--I didn't find a database entry for "smith2020iapago"
-Warning--I didn't find a database entry for "epc014"
-Warning--I didn't find a database entry for "epc137"
-Warning--I didn't find a database entry for "epc164"
-Warning--I didn't find a database entry for "Numeral2022"
-Warning--I didn't find a database entry for "CBI2024"
-Warning--I didn't find a database entry for "EBACLEARING2020"
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 0 entries,
+You've used 3 entries,
             3181 wiz_defined-function locations,
-            660 strings with 5274 characters,
-and the built_in function-call counts, 24 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 10
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
-chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 2
-int.to.chr$ -- 1
+            659 strings with 5327 characters,
+and the built_in function-call counts, 916 in all, are:
+= -- 63
+> -- 21
+< -- 3
++ -- 7
+- -- 6
+* -- 44
+:= -- 134
+add.period$ -- 6
+call.type$ -- 3
+change.case$ -- 15
+chr.to.int$ -- 2
+cite$ -- 3
+duplicate$ -- 69
+empty$ -- 88
+format.name$ -- 12
+if$ -- 182
+int.to.chr$ -- 2
 int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 3
-num.names$ -- 0
-pop$ -- 0
+missing$ -- 15
+newline$ -- 15
+num.names$ -- 6
+pop$ -- 48
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 18
 quote$ -- 0
-skip$ -- 2
+skip$ -- 35
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
-text.prefix$ -- 0
+substring$ -- 21
+swap$ -- 30
+text.length$ -- 3
+text.prefix$ -- 3
 top$ -- 0
-type$ -- 0
+type$ -- 24
 warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 2
-(There were 7 warnings)
+while$ -- 6
+width$ -- 5
+write$ -- 26
