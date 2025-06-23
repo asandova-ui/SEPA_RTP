@@ -1,7 +1,7 @@
 \section{Introducción}
 \label{sec:Introduccion}
 
-Para comprender el entorno actual de los pagos en Europa, conviene arrancar por la \emph{Single Euro Payments Area} (SEPA): un espacio comunitario en el que todos los pagos en euros se rigen por los mismos estándares técnicos y normas operativas, de modo que enviar dinero de un país a otro resulta tan ágil y claro como una transferencia nacional. SEPA estableció protocolos de mensajería comunes, armonizó los plazos de liquidación y fijó reglas uniformes de protección al usuario, creando la base sobre la que se despliegan hoy los servicios de pago más innovadores.
+Para comprender el entorno actual de los pagos en Europa, conviene arrancar por la \emph{Single Euro Payments Area} (SEPA): un espacio comunitario en el que todos los pagos en euros se rigen por los mismos estándares técnicos y normas operativas, de modo que enviar dinero de un país a otro resulta tan ágil y claro como una transferencia nacional\cite{ecb_sepa}. SEPA estableció protocolos de mensajería comunes, armonizó los plazos de liquidación y fijó reglas uniformes de protección al usuario, creando la base sobre la que se despliegan hoy los servicios de pago más innovadores.
 
 En los últimos diez años, la digitalización de los servicios financieros ha cambiado por completo cómo particulares y empresas gestionan sus transacciones dentro de ese marco SEPA. Las transferencias instantáneas, las API abiertas de los bancos y el auge del comercio electrónico han disparado la demanda de procesos de cobro que sean sencillos, transparentes y en tiempo real. No obstante, los instrumentos de pago tradicionales —tarjetas, transferencias convencionales o domiciliaciones— nacieron en un contexto muy distinto y todavía arrastran limitaciones que penalizan tanto la experiencia de usuario como la eficiencia operativa.
 
@@ -10,14 +10,15 @@ Aquí es donde entra en juego \emph{Request-to-Pay} (RTP). Este servicio de mens
 \subsection{Motivación}
 \label{subsec:Motivacion}
 
-La domiciliación bancaria regulada por el esquema \textit{SEPA Direct Debit} (\textbf{SDD})\footnote{\textit{SEPA Direct Debit} es el instrumento paneuropeo de cargo en cuenta regulado por el \emph{European Payments Council}.} desde 2014, sigue siendo el método principal para cobros recurrentes en España. No obstante, su estructura, pensada para un entorno de procesos \emph{offline}—genera hoy inconvenientes que chocan con las demandas de inmediatez, seguridad y experiencia de usuario fluida que caracterizan la economía digital actual.
+La domiciliación bancaria, regulada por el esquema \textit{SEPA Direct Debit} (\textbf{SDD})\cite{epc_sdd_2025} (instrumento paneuropeo de cargo en cuenta regulado por el \emph{European Payments Council} (EPC)) desde 2014, sigue siendo el método principal para cobros recurrentes en España. No obstante, su estructura, pensada para un entorno de procesos \emph{offline}—genera hoy inconvenientes que chocan con las demandas de inmediatez, seguridad y experiencia de usuario fluida que caracterizan la economía digital actual. Así se detectan una serie de ineficiencias, que se describen en la sección \ref{subsec:ineficiencias}, y una oportunidad de introducir un nuevo método de pago que solvente dichas ineficiencias, el cual se presenta en la sección \ref{subsec:oportunidadRTP}.
 
 \subsubsection{Ineficiencias operativas detectadas}
+\label{subsec:ineficiencias}
 
 Tras analizar la operativa SDD nacional se han identificado una serie de ineficiencias que afectan tanto a los usuarios como a las entidades participantes en el proceso de pago resumidas en los siguientes \textbf{5} puntos:
 \begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=0.75cm]
-      \item \textbf{Modelo off-line y necesidad de mandato físico}\\
-            El proceso de pago mediante el esquema SDD opera bajo un modelo offline, lo que implica una ausencia total de interacción en tiempo real entre las partes involucradas. Para iniciar el cobro, el deudor debe firmar y enviar un \textbf{mandato SEPA}\footnote{El mandato SEPA es un documento mediante el cual el deudor autoriza al acreedor a realizar cobros automáticos a través de la domiciliación bancaria.} en formato físico. Este documento debe ser conservado por el acreedor durante toda la duración del contrato y hasta 14 meses después de la última transacción realizada. Aunque la digitalización ha avanzado en muchos ámbitos, aún no existe un estándar único y interoperable para los \textbf{eMandates}\footnote{Un eMandate es la versión electrónica del mandato SEPA, que permite autorizar cobros de manera digital.}, lo que lleva a que cada entidad bancaria implemente su propio sistema. Esta falta de uniformidad genera inconsistencias y dificulta la estandarización del proceso.
+      \item \textbf{Modelo offline y necesidad de mandato físico}\\
+            El proceso de pago mediante el esquema SDD opera bajo un modelo offline, lo que implica una ausencia total de interacción en tiempo real entre las partes involucradas. Para iniciar el cobro, el deudor debe firmar y enviar un \textbf{mandato SEPA} en formato físico. Este mandato es un documento mediante el cual el deudor autoriza al acreedor a realizar cobros automáticos a través de la domiciliación bancaria. El documento debe ser conservado por el acreedor durante toda la duración del contrato y hasta 14 meses después de la última transacción realizada. Aunque la digitalización ha avanzado en muchos ámbitos, aún no existe un estándar único y interoperable para los \textbf{eMandates}, que son la versión electrónica de los mandatos SEPA que permitem autorizar cobros de manera digital, lo que lleva a que cada entidad bancaria implemente su propio sistema. Esta falta de uniformidad genera inconsistencias y dificulta la estandarización del proceso.\\
             \textbf{Consecuencias}:
       \begin{itemize}
             \item Fricciones significativas en los procesos de venta digital, ya que los usuarios deben completar pasos adicionales que rompen con la inmediatez esperada en el comercio electrónico actual.
@@ -36,7 +37,7 @@ Tras analizar la operativa SDD nacional se han identificado una serie de inefici
         \end{itemize}
 
   \item \textbf{Ciclos de cobro lentos}\\
-        Los tiempos de procesamiento en el esquema SDD son significativamente prolongados, lo que compromete tanto la eficiencia operativa como la experiencia del usuario. En el esquema \textsc{Core}\footnote{El esquema \textsc{Core} es el estándar de domiciliación bancaria SEPA utilizado para pagos entre empresas y consumidores.}, el acreedor debe enviar la orden de cobro al banco con una antelación de \textbf{D-5 días} para la primera domiciliación y de \textbf{D-2 días} para las domiciliaciones recurrentes. A esto se suman \textbf{dos días adicionales} para la liquidación interbancaria. En total, el proceso puede demorar entre seis y ocho días naturales desde que se solicita el cobro hasta que se confirma el abono, un plazo incompatible con las expectativas de inmediatez en la venta de bienes o servicios digitales.
+        Los tiempos de procesamiento en el esquema SDD son significativamente prolongados, lo que compromete tanto la eficiencia operativa como la experiencia del usuario. En el esquema \textsc{Core} \cite{epc016}, el acreedor debe enviar la orden de cobro al banco con una antelación de \textbf{D-5 días} para la primera domiciliación y de \textbf{D-2 días} para las domiciliaciones recurrentes. A esto se suman \textbf{dos días adicionales} para la liquidación interbancaria. En total, el proceso puede demorar entre seis y ocho días naturales desde que se solicita el cobro hasta que se confirma el abono, un plazo incompatible con las expectativas de inmediatez en la venta de bienes o servicios digitales.
         
         \textbf{Consecuencias}:
         \begin{itemize}
@@ -45,8 +46,8 @@ Tras analizar la operativa SDD nacional se han identificado una serie de inefici
           \item Pérdidas económicas significativas debido a la falta de confirmación inmediata del pago.
         \end{itemize}
 
-  \item \textbf{Costes y complejidad de las R-transactions}\footnote{Transacciones de rechazo, devolución o reembolso asociadas a pagos fallidos o no autorizados.}\\
-        Las \textbf{R-transactions} representan una fuente notable de complicaciones y costes adicionales. Estas transacciones se clasifican mediante diversos códigos, cada uno asociado a un flujo y reglas específicas, lo que dificulta su gestión y seguimiento. Los acreedores deben dedicar recursos a identificar las causas de cada R-transaction y aplicar las medidas correctivas correspondientes, un proceso que frecuentemente requiere intervención manual debido a la falta de automatización.
+  \item \textbf{Costes y complejidad de las R-transactions}\\
+        Las \textbf{R-transactions}, que son transacciones de rechazo, devolución o reembolso asociadas a pagos fallidos o no autorizados, representan una fuente notable de complicaciones y costes adicionales. Estas transacciones se clasifican mediante diversos códigos, cada uno asociado a un flujo y reglas específicas, lo que dificulta su gestión y seguimiento. Los acreedores deben dedicar recursos a identificar las causas de cada R-transaction y aplicar las medidas correctivas correspondientes, un proceso que frecuentemente requiere intervención manual debido a la falta de automatización.
         
         \textbf{Consecuencias}:
         \begin{itemize}
@@ -55,8 +56,8 @@ Tras analizar la operativa SDD nacional se han identificado una serie de inefici
           \item Posibilidad de errores o retrasos que afectan la productividad y la confianza en el esquema SDD.
         \end{itemize}
 
-  \item \textbf{Ausencia de autorización fuerte (\textsc{SCA})}\footnote{La SCA (Strong Customer Authentication) es un requisito de seguridad establecido por la directiva PSD2, que exige la verificación del usuario mediante al menos dos factores de autenticación.}\\
-        El esquema SDD se basa en un consentimiento previo otorgado mediante el mandato SEPA, pero no incorpora la \textbf{autorización fuerte del cliente (SCA)} en el momento de cada transacción. Una vez firmado el mandato, los cobros se ejecutan automáticamente sin que se solicite al deudor una autenticación adicional para cada operación.
+  \item \textbf{Ausencia de autorización fuerte}\\
+        El esquema SDD se basa en un consentimiento previo otorgado mediante el mandato SEPA, pero no incorpora la \textbf{autorización fuerte del cliente (SCA)}, que es un requisito de seguridad que exige la verificación del usuario mediante al menos dos factores de autenticación \cite{EC_2018_RTS_SCA} en el momento de cada transacción. Una vez firmado el mandato, los cobros se ejecutan automáticamente sin que se solicite al deudor una autenticación adicional para cada operación.
         
         \textbf{Consecuencias}:
         \begin{itemize}
@@ -74,26 +75,27 @@ Tras analizar la operativa SDD nacional se han identificado una serie de inefici
   \item Un \textbf{freno al desarrollo de la economía digital}, puesto que el SDD no está diseñado para ofrecer experiencias de pago instantáneas y fluidas, como las que proporcionan métodos alternativos como las tarjetas de crédito, los monederos electrónicos o plataformas como Bizum.
 \end{itemize}
 
-\subsubsection{Oportunidad de un esquema Request-to-Pay}
-El estándar \textit{SEPA Request-to-Pay} (\textbf{SRTP})\footnote{Iniciativa del European Payments Council que define un flujo de solicitud (\textit{request}) y aceptación de pagos en tiempo real, apoyado en mensajería \textbf{ISO 20022} y siendo independiente del instrumento de liquidación posterior.} abroda de manera efectiva las limitaciones técnicas y operativas del SDD, ofreciendo una laternativa más ágil y adaptada al entorno digital.
+\subsubsection{Oportunidad de un esquema RTP}
+\label{subsec:oportunidadRTP}
+El estándar \textit{SEPA RTP} (\textbf{SRTP}) aborda de manera efectiva las limitaciones técnicas y operativas del SDD, ofreciendo una laternativa más ágil y adaptada al entorno digital.
 
 A continuación se describen las principales ventajas del SRTP frente al SDD:
 
 \begin{enumerate}[label=\alph*)]
   \item \textbf{Autenticación reforzada y consentimiento digital inmediato}\\
-      El SRTP reemplaza el mandato físico del SDD por una solicitud de pago que el deudor aprueba directamente desde su banca en línea o wallet digital mediante SCA. Este proceso genera una prueba eléctronica de consentimiento, firmada y resgistrada en el sistema del PSP del pagador, eliminando la dependencia de documentos en papel y simplificando la gestión de autorizaciones.
+      El SRTP reemplaza el mandato físico del SDD por una solicitud de pago que el deudor aprueba directamente desde su banca en línea o wallet digital mediante SCA. Este proceso genera una prueba eléctronica de consentimiento, firmada y resgistrada en el sistema del Payment Service Provider (PSP) del pagador, eliminando la dependencia de documentos en papel y simplificando la gestión de autorizaciones.
 
   \item \textbf{Irrevocabilidad y mitigación de fraude \emph{post-servicio}}\\
-      Una vez aceptada la solicitd, el pago se ejecuta mediante SCT Inst\footnote{\textsc{SCT Inst}: transferencia inmediata SEPA con liquidación en menos de10 s.}. A diferencia del SDD que permite devoluciones automáticas en plazos amplios, el SRTP no admite reversiones sin causa justificada. Esto minimiza el riesgo de textbf{fraude amistoso}-donde el deudor reclama devoluciones tras recibir un servicio- y reduce la necesidad de provisiones por impagos.
+      Una vez aceptada la solicitd, el pago se ejecuta mediante SCT Inst, que es una transferencia inmediata SEPA con liquidación en menos de 10 s \cite{epc_sctinst_2025}. A diferencia del SDD que permite devoluciones automáticas en plazos amplios, el SRTP no admite reversiones sin causa justificada. Esto minimiza el riesgo de \textit{friendly fraud} y reduce la necesidad de provisiones por impagos.
 
   \item \textbf{Liquidez \emph{real-time} y conciliación automática}\\
-      Con fondos disponibles en menos de 10 segundos, las empresas pueden gestionar su tesorería con mayor precisión. Además, el uso de identificadores únicos y referencias estructuradas según el estándar ISO 20022 asegura que la información del pago se transmita íntegramente de extremo a extremo, permitiendo una conciliación automática y eliminando los retrasos y errores típicos del SDD.
+      Con fondos disponibles en menos de 10 segundos, las empresas pueden gestionar su tesorería con mayor precisión. Además, el uso de identificadores únicos y referencias estructuradas según el estándar ISO 20022 \cite{iso20022_55005}, asegura que la información del pago se transmita íntegramente de extremo a extremo, permitiendo una conciliación automática y eliminando los retrasos y errores típicos del SDD.
 
   \item \textbf{Simplificación operativa}\\
       El SRTP elimina las R-transactions, la custodia de mandatos físicos y las tareas administrativas asociadas. El flujo se reduce a dos mensajes principales -solicitud y aceptación-, con la opción de una transferenciua instantánea, ofreciendo una trazabilidad clara y directa.
 
   \item \textbf{Flexibilidad comercial y costes reducidos}\\
-      Este esquema soporta cobros únicos, recurrentes o fraccionados a través de canales digitales como enlaces profundos, códigos QR o APIs. Al estar basado en SCT Inst, las comisiones bancarias son bastante menores a las de las tarjetas o la destión de devoluciones del SDD, lo que mejora la eficiencias y amplía su aplicabilidad en el comercio electrónico.
+      Este esquema soporta cobros únicos, recurrentes o fraccionados a través de canales digitales como enlaces profundos, códigos QR o APIs. Al estar basado en SCT Inst, las comisiones bancarias son bastante menores a las de las tarjetas o la gestión de devoluciones del SDD, lo que mejora la eficiencias y amplía su aplicabilidad en el comercio electrónico.
 \end{enumerate}
 
 En conjunto, el SRTP conserva los puntos fuertes del SDD pero los adapta a las necesidades actuales, proporcionando una solución más rápida, segura y eficiente. Al superar las ineficiencias del SDD se convierte en una herramienta clave para modernizar los sistema de pago en la zona SEPA y, en concreto, en España.
@@ -121,73 +123,50 @@ Riesgo de fraude & Medio-Alto (devoluciones) & Bajo (\textsc{sca} + irreversibil
 \bigskip
 
 
-\subsection{Objetivos}
+\subsection{Objetivos técnicos fundamentales}
 \label{subsec:Objetivos}
-El propósito central de este TFG es desarrollar un sistema de software que simule, de principio a fin, un proveedor del esquema SRTP. Este proyecto nace con la idea de abordar las limitaciones del SDD, explicadas anteriormente. Se quiere demostrar que el SRTP puede ser una solución moderna, ágil y segura para los pagos en Europa, alineada con la versión 4.0 del \textit{SRTP Scheme Rulebook} \cite{epc014} y las guías técnicas del European Payments Council (\textit{EPC137} y \textit{EPC164}) \cite{epc137,epc164}.
+El propósito de este Trabajo de Fin de Grado es \textbf{demostrar}, de forma general, \textbf{cómo el esquema SRTP puede subsanar las ineficiencias operativas del SDD} y adaptarse al contexto digital actual. Para ello \textbf{se plantea el desarrollo de un prototipo de referencia que reproduzca el ciclo completo de una petición de pago} y permita evaluar sus ventajas frente al modelo tradicional. De manera deliberada, en esta sección los objetivos se formulan en términos generales; los detalles de implementación (arquitectura, tecnologías y herramientas concretas) se presentan más adelante, en el capítulo de Diseño (\ref{sec:diseno}).
 
-El sistema será un prototipo funcional que se pueda instalar fácilmente con \texttt{Docker Compose} y que ofrezca una API HTTP/JSON basada en el estándar \textit{OpenAPI 3.1}. Este prototipo debe cubrir las cuatro operaciones principales del flujo SRTP: crear una solicitud de pago (\textit{create}), rechazarla (\textit{reject}), responder a ella (\textit{response}) y cancelarla (\textit{cancel}). En resumen, queremos construir una herramienta que no solo funcione, sino que también sea práctica y fiel a las especificaciones del SRTP.
+A continuación se recogen los objetivos principales, ordenados de lo general a lo particular:
 
-Para mantener el proyecto enfocado y medible, hemos definido los siguientes \textbf{objetivos específicos}:
+\begin{itemize}
+    \item \textbf{Demostrar la viabilidad del SRTP como alternativa al SDD} \\
+    Validar que un flujo basado en solicitudes de pago inmediatas ofrece mayor agilidad, trazabilidad y control que la domiciliación bancaria, sin comprometer la seguridad ni la interoperabilidad dentro del ecosistema SEPA.
+    
+    \item \textbf{Emular de extremo a extremo el ciclo operativo de un proveedor RTP}\\
+    Construir un prototipo funcional que reproduzca los pasos esenciales de una operación SRTP ---creación, presentación, decisión, ejecución y cierre--- implicando a los actores y mensajes definidos por el \textit{rulebook} \cite{epc014}.
+    
+    \item \textbf{Garantizar integridad, confidencialidad y trazabilidad de las transacciones}\\
+    Incorporar salvaguardas de seguridad y gobierno del dato que permitan certificar el origen de cada mensaje, registrar su histórico de estados y conservar evidencias de consentimiento digital.
+    
+    \item \textbf{Facilitar la interacción en tiempo real entre los participantes}\\
+    Asegurar que los eventos relevantes del ciclo (solicitud, aceptación, rechazo, expiración, etc.) se propaguen al instante, de modo que pagador y beneficiario dispongan siempre de información actualizada para la toma de decisiones.
+    
+    \item \textbf{Proveer una base flexible y extensible para futuras integraciones}\\
+    Diseñar la solución de manera modular, de modo que pueda evolucionar hacia escenarios de producción y aplicaciones reales o incorporar mejoras como autenticación reforzada y analítica de eventos.
+    
+    \item \textbf{Evaluar el desempeño y las limitaciones del prototipo mediante pruebas controladas}\\
+    Someter la solución a distintos escenarios (casos favorables, errores operativos, etc) y contrastar los resultados con los objetivos de negocio y los requisitos técnicos del esquema SRTP.
+    
+    \item \textbf{Documentar los aprendizajes y proponer líneas de mejora}\\
+    Reflejar de forma crítica las decisiones tomadas, las diferencias respecto a la especificación oficial y las oportunidades para optimizar, escalar o industrializar la solución en trabajos posteriores.
+\end{itemize}
 
-\begin{enumerate}[leftmargin=0.75cm]
-  \item \textbf{Desarrollar una API robusta y eficiente.} \\
-        Implementar, usando \texttt{Node.js 20 LTS} y \texttt{Express}, un conjunto de \textit{endpoints} REST que garanticen alta disponibilidad. Además, incluir un sistema de notificaciones asíncronas mediante \texttt{Socket.IO} para que las actualizaciones lleguen en tiempo real, reflejando la inmediatez que el SRTP promete frente al lento SDD.
-
-  \item \textbf{Garantizar seguridad y confianza.} \\
-        Crear un módulo que gestione firmas digitales, sellado temporal y validación con certificados X.509 (\textit{QSeal}/\textit{QWAC}). Esto asegurará que el sistema cumpla con los requisitos de identificación, autenticación y autorización del \textit{API Security Framework} \cite{epc164}, protegiendo cada transacción y resolviendo la falta de autenticación fuerte del SDD.
-
-  \item \textbf{Almacenar datos de forma sencilla y fiable.} \\
-        Diseñar una base de datos ligera en \texttt{SQLite}, gestionada con \texttt{SQLAlchemy}, para guardar el estado de las operaciones y su auditoría. El modelo de datos estará alineado con los \textit{datasets} DS-02, DS-07 y DS-10 del \textit{Rulebook}, asegurando que todo esté bien organizado y traceable.
-
-  \item \textbf{Asegurar la calidad con pruebas automatizadas.} \\
-        Entregar una colección de pruebas en \texttt{Postman} y un flujo de integración continua en \texttt{GitHub Actions}. Estas pruebas verificarán la integración del sistema y validarán los esquemas JSON contra los estándares oficiales del EPC, garantizando que el prototipo funcione como se espera.
-
-  \item \textbf{Documentar y planificar mejoras futuras.} \\
-        Identificar cualquier diferencia entre las especificaciones del SRTP y nuestra implementación, explicando por qué ocurrieron. También propondremos una hoja de ruta clara para ajustar el sistema y hacerlo compatible con el \textit{Electronic Data Submission} (EDS) en el futuro, asegurando su relevancia a largo plazo.
-
-\end{enumerate}
-
-En definitiva, este TFG busca construir una solución práctica que demuestre el potencial del SRTP para superar las trabas del SDD, usando tecnologías modernas y un enfoque riguroso. Queremos que este prototipo no solo cumpla con los estándares técnicos, sino que también inspire confianza en una nueva forma de gestionar pagos en Europa.
+En definitiva, este TFG busca construir una solución práctica que demuestre el potencial del SRTP para superar las trabas del SDD, usando tecnologías modernas y un enfoque riguroso. Este prototipo no solo debe cumplir con los estándares técnicos, sino que también inspire confianza en una nueva forma de gestionar pagos en Europa.
 
 \subsection{Fases y Métodos}
 \label{subsec:FasesMetodos}
 El TFG se ha estructurado en 3 fases principales:
 
 \begin{description}
-  \item[Fase 1 – Análisis y planificación]%
-      En esta primera etapa se estudió el mundo de los pagos en la zona SEPA, revisando los documentos emitidos por el EPC para identificar las posibles mejoras que el RTP podría suponer.
+  \item[Fase 1 – Análisis y planificación]\\
+      En esta primera etapa se estudiará el mundo de los pagos en la zona SEPA, revisando los documentos emitidos por el EPC \cite{EPC_official} para identificar las posibles mejoras que el RTP podría suponer.
       
-      Luego, se estudiaron los casos de uso del RTP, identificando qué necesitan hacer los actores principales y se planificó el prototipo.
-  \item[Fase 2 – Diseño e implementación]%
-      Una vez claro el conexto, se comenzó a diseñar la estructura del prototipo definiendo los roles de los actores y cómo interactúan entre si.
-
-      La implementación se ha llevado a cabo usando herramientas que se detallarán posteriormente.
-  \item[Fase 3 – Pruebas y validación]%
-      Por último, una vez implementado el prototipo se realizaron una serie de pruebas y comprobaciones para verificar que todo funciona correctamente, como veremos en otro apartado del documento.
+      Luego, se estudiaron los casos de uso del RTP, identificando qué necesitan hacer los actores principales y se planificará el prototipo.
+  \item[Fase 2 – Diseño e implementación]\\
+      Una vez claro el contexto, se comenzará a diseñar la estructura del prototipo definiendo los roles de los actores y cómo interactúan entre si.
+      La implementación se llevará a cabo usando herramientas que se detallarán en el capítulo de diseño (\ref{sec:diseno}) e implementación (\ref{sec:implementacion}).
+  \item[Fase 3 – Pruebas y validación]\\
+      Por último, una vez implementado el prototipo se realizarán una serie de pruebas y comprobaciones para verificar que todo funciona correctamente, como veremos en el capítulo de validación (\ref{sec:validacion}).
 \end{description}
 
-\subsection{Medios necesarios empleados para el desarrollo}
-\label{subsec:Medios}
-\begin{itemize}
-  \item \textbf{Software de desarrollo:}  
-        \texttt{Node.js 20 LTS}, \texttt{Express 4}, \texttt{Socket.IO 4},
-        \texttt{Sequelize 6}, \texttt{Jest}, \texttt{Postman v10},
-        \texttt{Docker 24}, \texttt{Docker Compose v2},
-        \texttt{Git} y \texttt{GitHub Actions}.
-  \item \textbf{Herramientas de apoyo:}  
-        \texttt{OpenSSL 3} para gestión de certificados,
-        \texttt{toxiproxy} para pruebas de resiliencia,
-        \texttt{Spectral OCI} para linting de especificaciones OpenAPI.
-  \item \textbf{Documentación oficial:}  
-        SRTP Scheme Rulebook v4.0 \cite{epc014},  
-        SRTP related API Specifications v3.1 \cite{epc137},  
-        API Security Framework v2.0 \cite{epc164},  
-        ISO 20022 \emph{pacs/pain/camt},  
-        directivas PSD2/eIDAS.
-  \item \textbf{Hardware y S.O.:}  
-        Portátil x86-64, 16 GB RAM, SSD 512 GB, Ubuntu 22.04 LTS, conexión
-        simétrica de 300 Mbps; virtualización \texttt{Docker Desktop}.
-  \item \textbf{Repositorios y control de versiones:}  
-        Organización privada en GitHub; \texttt{branch protection} y
-        \texttt{semantic-versioning}.
-\end{itemize}

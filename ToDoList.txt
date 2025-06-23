@@ -1,0 +1,8 @@
+NO HECHO añadir un msg descriptive en formato UTF-8
+NO HECHO Cualquier parte puede emitir una cancelation request
+HECHO Falta por terminar el apartado 3.7
+revisar RNF-02
+
+Mañana tengo que revisar toda la parte de validacion y omitir un par de cosas y todas las capturas ponerlas en formato vectorial.
+
+HECHO Además, tengo que modificar todos los primeros apartados quitando las footnotes, haciendo el diagrama de flujo bien ya que ahora no está en vectorial, podría usar la misma herramienta que para los flujos de los casos de uso y tal. (Grok)

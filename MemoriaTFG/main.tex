@@ -2,11 +2,18 @@
 \usepackage{graphicx} % Required for inserting images
 \usepackage[spanish, english]{babel}
 \usepackage[hidelinks]{hyperref}
+%----------------------------------------
+% BIBLATEX + BIBER
+\usepackage[backend=biber,style=alphabetic,sorting=nyt,language=spanish]{biblatex}
+\addbibresource{bibliografia.bib}
+%----------------------------------------
+
 \usepackage{makecell}
 \usepackage[numbered,framed]{listings}
 \usepackage{color} % red, green, blue, yellow, cyan, magenta, black, white
 \usepackage{enumitem}
 \usepackage{lmodern}
+\usepackage{microtype} 
 \usepackage{array}
 \usepackage{float}
 \usepackage{tabularx}
@@ -18,8 +25,11 @@
 \usepackage{threeparttable}
 \usepackage{tikz}       % Diagrama en capas (cubo)
 \usepackage{footmisc}   % Mejor gestión de notas a pie de página (opcional)
+\usepackage{adjustbox}
 \definecolor{mylilas}{RGB}{170,55,241}
 \definecolor{backcolour}{rgb}{0.92,0.95,0.95}
+
+\usepackage[printonlyused]{acronym}
 
 \usepackage{longtable}
 \usepackage{geometry}
@@ -71,7 +81,7 @@
     \vspace{0.5cm}
     {\scshape Grado en Ingeniería de Tecnologías de Telecomunicación \par}
     \vspace{0.5cm}
-    {\bfseries\scshape\Large Request To Pay frente a la domiciliación bancaria: propuesta de mejora e implementación de un prototipo. \par}
+    {\bfseries\scshape\Large \textit{Request To Pay} frente a la domiciliación bancaria: propuesta de mejora e implementación de un prototipo \par}
     \vspace{1.5cm}
     { Autor: \\}
     { Alonso Sandoval Martínez }\\
@@ -84,10 +94,6 @@
 % Configurando el idioma
 \selectlanguage{spanish}  
 
-% Añadiendo el índice justo después de la portada
-\newpage
-\tableofcontents
-
 % Añadiendo los agradecimientos desde un archivo externo
 \newpage
 \input{src/agradecimientos.tex}
@@ -96,6 +102,52 @@
 \newpage
 \input{src/resumen.tex}
 
+% Añadiendo el índice justo después de la portada
+\newpage
+\tableofcontents
+
+\newpage
+\phantomsection % Añade un destino para el hipervínculo
+\section*{Lista de acrónimos}
+\label{sec:Lista de acrónimos}
+\addcontentsline{toc}{section}{Lista de acrónimos} % Añade al índice con el destino correcto
+\begin{acronym}[SRTP]
+\begin{enumerate}
+  \item API – Application Programming Interface
+  \item CDN – Content Delivery Network
+  \item CSS3 – Cascading Style Sheets 3
+  \item EBA – Euro Banking Association
+  \item EDS – Electronic Data Submission
+  \item EDS-Dir – EPC Directory Service
+  \item EPC – European Payments Council
+  \item ERPB – Euro Retail Payments Board
+  \item ES6 – ECMAScript 6
+  \item HTML5 – HyperText Markup Language 5
+  \item HTTP – Hypertext Transfer Protocol
+  \item IBAN – International Bank Account Number
+  \item ISO20022 – International Organization for Standardization 20022
+  \item JSON – JavaScript Object Notation
+  \item NFC – Near Field Communication
+  \item ORM – Object-Relational Mapping
+  \item POS – Point of Sale
+  \item PSD2 – Payment Services Directive 2
+  \item PSP – Payment Service Provider
+  \item QR – Quick Response
+  \item RTP – Request-to-Pay
+  \item SCA – Strong Customer Authentication
+  \item SCT – SEPA Credit Transfer
+  \item SCT Inst – SEPA Instant Credit Transfer
+  \item SEPA – Single Euro Payments Area
+  \item SDD – SEPA Direct Debit
+  \item SRTP – SEPA Request-to-Pay
+  \item TCP – Transmission Control Protocol
+  \item TFG – Trabajo de Fin de Grado
+  \item TIPS – TARGET Instant Payment Settlement
+  \item TPV – Terminal Punto de Venta
+  \item WSGI – Web Server Gateway Interface
+\end{enumerate}
+
+
 % Volviendo al español para el resto del documento
 \selectlanguage{spanish} 
 
@@ -103,22 +155,41 @@
 % Comenzando el cuerpo principal (numeración ya es arábiga)
 \newpage
 
+\null
+\clearpage
+
 \input{src/introduccion.tex}
 \newpage
+
+\null
+\clearpage
 
 \input{src/estado_arte.tex}
 \newpage
 
+\null
+\clearpage
+
+\input{src/diseño.tex}
+\newpage
+
+\null
+\clearpage
+
 % 3. Diseño e Implementación
 \input{src/implementacion.tex}
+%\newpage
 \newpage
 
-% 4. Métodos
-%\input{src/metodos.tex}
+\null
+\clearpage
+
+\input{src/validacion.tex}
 \newpage
 
-% 5. Resultados y discusión
-%\input{src/resultados.tex}
+\null
+\clearpage
+
 \newpage
 \input{src/conclusiones.tex}
 \newpage
@@ -126,12 +197,13 @@
 \clearpage
 
 
-% Añadiendo las referencias
-\clearpage
-\renewcommand{\bibname}{Referencias}
-\bibliographystyle{castellano2}
-\bibliography{bibliografia}
 
+\null
+\clearpage
+
+\newpage
+
+\input{src/codigos.tex}
 % Añadiendo el índice de figuras
 \newpage
 \renewcommand{\listfigurename}{Índice de Figuras}
@@ -146,9 +218,15 @@
 
 % Añadiendo el índice de códigos
 \newpage
-\renewcommand*{\lstlistlistingname}{Índice de Códigos}
+\renewcommand*{\lstlistlistingname}{Índice de Listados}
 \renewcommand*{\lstlistingname}{Código}
 \lstlistoflistings
-\addcontentsline{toc}{section}{Índice de Códigos}
+\addcontentsline{toc}{section}{Índice de Listados}
+
+% Añadiendo las referencias
+\clearpage
+\nocite{*}
+\printbibliography[title={Bibliografía}]
+
 
 \end{document}

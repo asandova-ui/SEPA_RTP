@@ -1,47 +1,17 @@
-This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
-Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
-The top-level auxiliary file: main.aux
-The style file: castellano2.bst
-Database file #1: bibliografia.bib
-Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 3 entries,
-            3181 wiz_defined-function locations,
-            659 strings with 5327 characters,
-and the built_in function-call counts, 916 in all, are:
-= -- 63
-> -- 21
-< -- 3
-+ -- 7
-- -- 6
-* -- 44
-:= -- 134
-add.period$ -- 6
-call.type$ -- 3
-change.case$ -- 15
-chr.to.int$ -- 2
-cite$ -- 3
-duplicate$ -- 69
-empty$ -- 88
-format.name$ -- 12
-if$ -- 182
-int.to.chr$ -- 2
-int.to.str$ -- 0
-missing$ -- 15
-newline$ -- 15
-num.names$ -- 6
-pop$ -- 48
-preamble$ -- 1
-purify$ -- 18
-quote$ -- 0
-skip$ -- 35
-stack$ -- 0
-substring$ -- 21
-swap$ -- 30
-text.length$ -- 3
-text.prefix$ -- 3
-top$ -- 0
-type$ -- 24
-warning$ -- 0
-while$ -- 6
-width$ -- 5
-write$ -- 26
+[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
+[0] Config.pm:307> INFO - Logfile is 'main.blg'
+[67] biber:322> INFO - === Mon Jun 23, 2025, 18:51:49
+[79] Biber.pm:415> INFO - Reading 'main.bcf'
+[132] Biber.pm:940> INFO - Using all citekeys in bib section 0
+[143] Biber.pm:4256> INFO - Processing section 0
+[144] Utils.pm:75> INFO - Globbing data source 'bibliografia.bib'
+[144] Utils.pm:91> INFO - Globbed data source 'bibliografia.bib' to bibliografia.bib
+[152] Biber.pm:4455> INFO - Looking for bibtex format file 'bibliografia.bib' for section 0
+[153] bibtex.pm:1653> INFO - LaTeX decoding ...
+[167] bibtex.pm:1471> INFO - Found BibTeX data source 'bibliografia.bib'
+[258] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[258] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[258] Biber.pm:4084> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'en-US'
+[258] Biber.pm:4090> INFO - No sort tailoring available for locale 'en-US'
+[275] bbl.pm:652> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[282] bbl.pm:755> INFO - Output to main.bbl

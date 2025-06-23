@@ -1,6 +1,12 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \babel@toc {english}{}
 \babel@toc {spanish}{}
 \babel@toc {spanish}{}
-\contentsline {table}{\numberline {1}{\ignorespaces Comparativa entre SDD y SRTP con SCT Inst}}{8}{table.1}%
-\contentsline {table}{\numberline {2}{\ignorespaces Pasos del flujo del esquema SEPA Request-to-Pay (SRTP) y su descripción}}{12}{table.2}%
-\contentsline {table}{\numberline {3}{Pasos del esquema SRTP}}{15}{table.3}%
+\babel@toc {english}{}
+\babel@toc {spanish}{}
+\contentsline {table}{\numberline {1}{\ignorespaces Comparativa entre SDD y SRTP con SCT Inst}}{12}{table.1}%
+\contentsline {table}{\numberline {2}{\ignorespaces Pasos del flujo del esquema SEPA Request-to-Pay (SRTP) y su descripción}}{17}{table.2}%
+\contentsline {table}{\numberline {3}{Pasos del esquema SRTP}}{20}{table.3}%
+\contentsline {table}{\numberline {4}{Requisitos funcionales}}{36}{table.4}%
+\contentsline {table}{\numberline {5}{Requisitos no funcionales}}{37}{table.5}%
+\contentsline {table}{\numberline {6}{\ignorespaces Endpoints REST del sistema SRTP}}{57}{table.6}%
