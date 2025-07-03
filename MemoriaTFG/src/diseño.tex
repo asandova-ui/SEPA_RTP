@@ -1,12 +1,12 @@
 %--------------------------------------------------------------------
 % 3 Diseño – SEPA Request‑to‑Pay Prototype (Clase `article`)
 %--------------------------------------------------------------------
-\section{Diseño}
+\chapter{Diseño}
 \label{sec:diseno}
 
 En este apartado se detalla la estrategia adoptada para \emph{emular, con un prototipo funcional, el comportamiento extremo‑a‑extremo del servicio SEPA RTP}. Se parte de los requisitos funcionales publicados en el \emph{EPC RTP Rulebook 4.0} y se traducen a casos de uso concretos, modelo de datos y flujos de interacción que servirán de base a la implementación descrita en el apartado~\ref{sec:implementacion}. Se persigue, ante todo, una visión que facilite al lector identificar primero el~\emph{qué} resuelve la solución y, a continuación, el~\emph{cómo} se materializa.
 
-\subsection{Objetivos técnicos derivados}
+\section{Objetivos técnicos}
 \label{subsec:diseno_objetivos}
 
 
@@ -18,7 +18,7 @@ El diseño e implementación del prototipo desarrollado responden a los objetivo
     
     El propósito fundamental del prototipo es desarrollar un sistema que emule de manera completa y fiel el ciclo del esquema RTP, abarcando todas las etapas definidas en la tabla de pasos del SRTP \ref{tab:srtp-steps-b}. Esto implica que el prototipo debe ser capaz de replicar el flujo completo del proceso, desde el momento en que el beneficiario inicia una solicitud de pago hasta la resolución final por parte del pagador, incluyendo tanto escenarios exitosos como aquellos en los que se producen errores o rechazos.
     
-    Quiero que el sistema emule todas las operaciones clave del RTP: la creación de la solicitud por parte del beneficiario, la validación por parte de los PSP y la decisión final del pagador. Esto incluye manejar situaciones reales, como la falta de fondos del pagador o errores en los datos de la solicitud, para garantizar que el prototipo sea robusto y represente fielmente cómo funcionaría un proveedor de RTP en un entorno real.
+    Se quiere que el sistema emule todas las operaciones clave del RTP: la creación de la solicitud por parte del beneficiario, la validación por parte de los PSP y la decisión final del pagador. Esto incluye manejar situaciones reales, como la falta de fondos del pagador o errores en los datos de la solicitud, para garantizar que el prototipo sea robusto y represente fielmente cómo funcionaría un proveedor de RTP en un entorno real.
     
     El sistema implementará una API basada en HTTP/JSON que cubra las operaciones principales de RTP. Además se diseñarán mecanismos para simular errores como IBAN inválidos o saldos insuficientes, y se registrarán los resultados de cada etapa para analizar su comportamiento.
     
@@ -29,7 +29,7 @@ El diseño e implementación del prototipo desarrollado responden a los objetivo
     
     Dado que el RTP es un esquema diseñado para operar en un entorno digital y online, se busca garantizar que todas las partes involucradas reciban información inmediata sobre cualquier cambio o evento relacionado con la solicitud de pago.
 
-    Quiero que el sistema notifique instantáneamente a los actores cada vez que ocurra un evento significativo, como la creación de una solicitud RTP, su validación por un PSP o la decisión final del pagador. Esto simulará la experiencia que un usuario tendría al recibir una notificación en su aplicación bancaria, permitiendo al pagador reaccionar rápidamente y al beneficiario conocer el estado de su solicitud sin demoras.
+   Se quiere que el sistema notifique instantáneamente a los actores cada vez que ocurra un evento significativo, como la creación de una solicitud RTP, su validación por un PSP o la decisión final del pagador. Esto simulará la experiencia que un usuario tendría al recibir una notificación en su aplicación bancaria, permitiendo al pagador reaccionar rápidamente y al beneficiario conocer el estado de su solicitud sin demoras.
 
     Se utilizarán eventos de WebSocket, una tecnología que permite una comunicación bidireccional en tiempo real entre el servidor y los clientes. Por ejemplo, cuando el beneficiario crea una solicitud, el sistema enviará una notificación al pagador a través de una sala específica WebSocket; de manera similar, cuando el pagador tome una decisión, el beneficiario será informado de inmediato. Este enfoque asegura que las actualizaciones sean push en lugar de depender de consultas manuales.
 
@@ -40,7 +40,7 @@ El diseño e implementación del prototipo desarrollado responden a los objetivo
 
     La seguridad y la capacidad de rastrear todas las acciones realizadas son pilares fundamentales para cualquier sistema de pagos, especialmente uno que aspire a ser adoptado en un contexto real.
 
-    Quiero que cada cambio de estado en una solicitud RTP quede registrado de forma segura e inalterable en la base de datos, permitiendo reconstruir el historial completo de cualquier solicitud en cualquier momento. Esto servirá para auditar el sistema, prevenir fraudes y resolver disputas entre las partes.
+    Se quiere que cada cambio de estado en una solicitud RTP quede registrado de forma segura e inalterable en la base de datos, permitiendo reconstruir el historial completo de cualquier solicitud en cualquier momento. Esto servirá para auditar el sistema, prevenir fraudes y resolver disputas entre las partes.
 
     Cada transición de estado se almacenará junto con un hash SHA-256, que asegura la integridad de los datos, y una marca de tiempo en formato UTC, que indica el momento exacto de la acción. Por ejemplo, si un PSP valida una solicitud, se generará un registro con estos elementos, y cualquier intento de modificar los datos será detectable gracias al hash. Además se implementarán controles de acceso por roles para limitar quién puede realizar cada acción.
 
@@ -51,7 +51,7 @@ El diseño e implementación del prototipo desarrollado responden a los objetivo
 
     Es importante diseñar un sistema de almacenamiento que sea práctico para las fases iniciales del desarrollo y pruebas, pero que también permita crecer en el futuro si el prototipo se expande.
 
-    Quiero que la información generada por las solicitudes RTP se guarde de forma sencilla y sin requerir recursos excesivos durante el desarrollo, utilizando herramientas que no dependan de configuraciones complejas o servidores externos. Al mismo tiempo, quiero que el diseño sea flexible para adaptarse a necesidades mayores más adelante.
+    Se quiere que la información generada por las solicitudes RTP se guarde de forma sencilla y sin requerir recursos excesivos durante el desarrollo, utilizando herramientas que no dependan de configuraciones complejas o servidores externos. Al mismo tiempo, quiero que el diseño sea flexible para adaptarse a necesidades mayores más adelante.
 
     Se empleará SQLite como base de datos, gestionada mediante SQLAlchemy, una biblioteca que facilita la interacción con los datos. SQLite es ideal para este prototipo porque es ligera, no requiere instalación adicional y funciona bien en entornos locales. Sin embargo, el sistema se estructurará de manera modular, permitiendo una migración futura a PostgreSQL u otra base de datos más robusta si el volumen de transacciones o usuarios aumenta.
 
@@ -62,7 +62,7 @@ El diseño e implementación del prototipo desarrollado responden a los objetivo
 
     Para garantizar la calidad y fiabilidad del prototipo, este objetivo busca establecer un proceso de verificación continua que detecte errores y asegure que el sistema funciona correctamente a medida que evoluciona.
 
-    Quiero crear un conjunto de pruebas que revisen automáticamente las funcionalidades del servidor y que estas pruebas se ejecuten de manera recurrente cada vez que se realicen cambios en el código. Esto asegurará que el sistema permanezca estable y funcional durante todo el desarrollo.
+    Se quiere crear un conjunto de pruebas que revisen automáticamente las funcionalidades del servidor y que estas pruebas se ejecuten de manera recurrente cada vez que se realicen cambios en el código. Esto asegurará que el sistema permanezca estable y funcional durante todo el desarrollo.
 
     Se diseñarán pruebas automáticas utilizando Postman, una herramienta que permite simular peticiones HTTP y validar las respuestas de la API. Estas pruebas cubrirán los endpoints principales y se integrarán en un flujo de integración continua.
 
@@ -70,7 +70,7 @@ El diseño e implementación del prototipo desarrollado responden a los objetivo
 
 \end{enumerate}
 
-\subsection{Actores y alcance}
+\section{Actores y alcance}
 \label{subsec:diseno_actores}
 
 La emulacion del SRTP en este prototipo se basa en el modelo de cuatro esquinas expuesto anteriormente en la figura \ref{fig:4corner}. Este modelo es ampliamente utilizado en sistemas de pagos europeos porque proporciona un marco claro y seguro para gestionar transacciones, dividiendo las responsabilidades entre cuatro actores principales. Estos actores trabajan juntos para garantizar que una solicitud de pago fluya desde quien la inicia hasya quien debe responderla, pasando por intermediarios financieros que facilitan el proceso. A continuación se describen en detalle los actores y cómo interactúan, seguidos por una explicación del alcance de la emulación en el prototipo.
@@ -105,10 +105,10 @@ El prototipo tiene como objetivo simular el flujo del esquema SRTP en un entorno
 \end{description}
 
 En resumen, la emulación sigue el modelo de cuatro esquinas de la EPC, con cuatro actores claramente definidos que interactúan en una red local. El prototipo se centra en simular la solicitud de pago y las respuestas entre los actores, omitiendo deliberadamente el registro en la OSM y la materialización de la orden de pago SCT Inst para mantener el enfoque en los aspectos clave del RTP, alineándose con los objetivos del proyecto y las limitaciones establecidas.
-\subsection{Requisitos}
+\section{Requisitos}
 \label{subsec:diseno_requisitos}
 
-\subsubsection{Requisitos funcionales (RF)}
+\subsection{Requisitos funcionales (RF)}
 Los requisitos funcionales detallan las operaciones específicas que el sistema debe realizar para emular el esquema SRTP. Estos requisitos aseguran que el prototipo implementado cubra el flujo completo de una solicitud de pago, desde su creación hasta la decisión final, incluyendo las interacciones entre los actores del modelo de cuatro esquinas.
 
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.11\textwidth}p{0.8\textwidth}@{}}
@@ -126,7 +126,7 @@ RF-06 & Cualquier parte involucrada debe poder emitir una solicitud de cancelaci
 \label{tab:RF}
 \end{longtable}
 
-\subsubsection{Requisitos no funcionales (RNF)}
+\subsection{Requisitos no funcionales (RNF)}
 Los requisitos no funcionales especifican las cualidades y restricciones del sistema que garantizan su rendimiento, seguridad y mantenibilidad. Estos requisitos aseguran que el prototipo sea eficiente y adecuado para simular un sistema de pagos en tiempo real, incluso en un entorno controlado.
 
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.11\textwidth}p{0.8\textwidth}@{}}
@@ -143,12 +143,12 @@ RNF-03 & El prototipo debe depender exclusivamente de tecnologías portables com
 
 Los requisitos enlazan con la implememtación \ref{sec:implementacion} y con pruebas de validación incluidas en el apartado~\ref{sec:validacion}. Además, cada transición de estado se acompaña de un identificador único para facilitar el seguimiento en los logs.
 
-\subsection{Casos de uso}
+\section{Casos de uso}
 \label{subsec:diseno_casos_uso}
 
 Los casos de uso describen las interacciones clave entre los actores y el sistema para cumplir con los requisitos funcionales del esquema. A continuación, se presentan dos casos de uso: CU-01 para la creación de una solicitud RTP y CU-02 para la decisión sobre dicha solicitud.
 
-\subsubsection{CU-01 Crear solicitud RTP}
+\subsection{CU-01 Crear solicitud RTP}
 Este caso de uso describe cómo el \textit{Beneficiario} inicia una solicitud de pago (\textit{Request To Pay}, RTP) y cómo esta es procesada por el \textit{PSP Beneficiario} para su enrutamiento al \textit{PSP pagador}.
 \begin{description}
   \item[Actor primario] ~ \textit{Beneficiario}
@@ -171,7 +171,7 @@ Este caso de uso describe cómo el \textit{Beneficiario} inicia una solicitud de
     \end{itemize}
 \end{description}
 
-\subsubsection{CU-02: Decidir solicitud RTP}
+\subsection{CU-02: Decidir solicitud RTP}
 Este caso de uso detalla cómo el \textit{pagador} recibe la solicitud RTP a través del \textit{PSP pagador}, toma una decisión (\textit{accept} o \textit{reject}), y cómo esta decisión se notifica a los demás actores.
 \begin{description}
   \item[Actor primario] ~ \textit{pagador}
@@ -211,7 +211,7 @@ Los flujos completos se ilustran en los diagramas de secuencia (Fig.~\ref{fig:se
   \label{fig:seq_cu02}
 \end{figure}
 
-\subsection{Modelo de datos}
+\section{Modelo de datos}
 \label{subsec:diseno_datos}
 
 % Descripción del esquema de la base de datos y referencia a la figura del modelo ER
@@ -278,7 +278,7 @@ Las relaciones entre las tablas están definidas mediante claves foráneas:
 Todas las claves foráneas están configuradas con \emph{\texttt{ON DELETE CASCADE}}, lo que significa que la eliminación de un registro en una tabla padre (como \texttt{Actor} o \texttt{RTP}) provocará la eliminación automática de los registros dependientes en las tablas hijas (como \texttt{RTP} o \texttt{Log}), facilitando las pruebas y el mantenimiento del prototipo.
 
 
-\subsection{Arquitectura lógica}
+\section{Arquitectura lógica}
 \label{subsec:diseno_arquitectura}
 
 La arquitectura lógica del prototipo, ilustrada en la Figura~\ref{fig:componentes}, organiza los componentes del sistema en capas para garantizar una separación clara de responsabilidades y facilitar la escalabilidad y el mantenimiento. El diseño se basa en un enfoque modular que permite simular el flujo del esquema SRTP en un entorno distribuido, utilizando tecnologías modernas como REST y WebSocket para la comunicación y SQLAlchemy para la persistencia.
@@ -292,7 +292,7 @@ La arquitectura lógica del prototipo, ilustrada en la Figura~\ref{fig:component
 \end{figure}
 
 % Descripción de los componentes principales
-\subsubsection{Componentes principales}
+\subsection{Componentes principales}
 \label{subsec:componentes_principales}
 El sistema se estructura en tres componentes principales:
 \begin{itemize}
@@ -304,7 +304,7 @@ El sistema se estructura en tres componentes principales:
 %----------------------------------------------
 % 3.6.2 – Flujo de interacción lógico
 %----------------------------------------------
-\subsubsection{Flujo de interacción lógico}
+\subsection{Flujo de interacción lógico}
 \label{subsec:flujo_interaccion}
 
 El ciclo \textbf{SRTP} se articula en los cuatro pasos lógicos que se detallan a continuación:
@@ -333,7 +333,7 @@ Con este patrón se obtienen las siguientes ventajas:
 
 
 
-\subsection{Emulación del flujo RTP}
+\section{Emulación del flujo RTP}
 \label{subsec:emulacion_flujo_rtp}
 
 % Inclusión de la figura de la máquina de estados
@@ -346,14 +346,14 @@ Con este patrón se obtienen las siguientes ventajas:
 
 El objetivo de este apartado es describir cómo el prototipo recrea, de extremo a extremo, el ciclo de vida de una solicitud RTP dentro del bloque \textbf{Service RTP}, único responsable de aplicar la lógica de negocio y salvaguardar la coherencia del estado global. A diferencia de otros componentes, este servicio actúa como \emph{single source of truth}: valida, persiste, publica eventos de dominio y rechaza cualquier transición inválida.
 
-\subsubsection{Máquina de estados del objeto RTP}
+\subsection{Máquina de estados del objeto RTP}
 \label{subsec:rtp_state_machine}
 
 La Figura~\ref{fig:state_machine_rtp} sintetiza el recorrido que puede seguir una solicitud:  
 \textbf{Creado $\rightarrow$ Validado Beneficiario $\rightarrow$ Enrutado $\rightarrow$ Validado Payer $\rightarrow$ (Aceptado $|$ Rechazado $|$ Cancelado)}.  
 Cada arista representa una operación expuesta por la API (por ejemplo, \texttt{create}, \texttt{validate\_beneficiary}, \texttt{route}, \texttt{validate\_payer}, \texttt{accept}, \texttt{reject}, \texttt{cancel}) y sólo puede ejecutarse si el objeto se encuentra en el estado de origen indicado.
 
-\subsubsection{Transiciones y reglas de negocio}
+\subsection{Transiciones y reglas de negocio}
 
 \begin{description}
   \item[\textbf{Creación} (\texttt{create})]  
@@ -372,11 +372,11 @@ Cada arista representa una operación expuesta por la API (por ejemplo, \texttt{
 
 Todas las reglas están encapsuladas en métodos de dominio homogéneos en firma y manejo de errores, favoreciendo la mantenibilidad y la trazabilidad entre diseño y código.
 
-\subsubsection{Condiciones excepcionales y \emph{timeouts}}
+\subsection{Condiciones excepcionales y \emph{timeouts}}
 
 Si el pagador no responde antes de la \textbf{fecha/hora de expiración} definida en la solicitud, el sistema ejecuta una transición automática a \textsc{CANCELADO}. Del mismo modo, cualquier error técnico de un PSP desemboca en un \texttt{reject}, manteniendo la consistencia global sin intervención manual.
 %
-%\subsubsection{Resumen}
+%\subsection{Resumen}
 %
 %El modelo de estados implementado consagra tres principios:
 %

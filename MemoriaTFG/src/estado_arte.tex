@@ -2,10 +2,10 @@
 % Antecedentes y estado del arte
 %----------------------------------------------------------------------
 
-\section{Antecedentes y estado del arte}
+\chapter{Antecedentes y estado del arte}
 \label{sec:estado-arte}
 
-\subsection{Evolución de los medios de pago hacia SEPA}
+\section{Evolución de los medios de pago hacia SEPA}
 \label{subsec:evolucion-sepa}
 
 
@@ -18,14 +18,14 @@ Así, en \textit{2008} se lanzó el esquema \textit{\textbf{SEPA Credit Transfer
 
 En la actualidad, los esquemas SEPA (transferencias estándar e inmediatas, adeudos básicos y B2B) concentran la mayoría de pagos bancarios en euros dentro de Europa. Este salto hacia la unificación de pagos fue liderado por la propia industria bancaria europea. En \textit{2002} los bancos constituyeron el \textit{\textbf{European Payments Council} (EPC)}, órgano de autorregulación que diseña y gestiona los esquemas SEPA. El EPC publicó las primeras \emph{rulebooks} de SCT y SDD en 2008–2009, estableciendo estándares comunes de mensaje \emph{ISO~20022} y calendarios de liquidación. Cabe destacar que el EPC no es un organismo legislativo de la UE ni un regulador, sino una asociación del sector bancario que actúa de facto como ente normalizador: especifica las reglas de los esquemas utilizados por los \textbf{PSP} y coopera con los bancos centrales para operar las infraestructuras de compensación. Gracias a esta colaboración público-privada, a partir de \textit{2014} se completó con éxito la migración de millones de pagos nacionales al formato SEPA, eliminando diferencias entre pagos domésticos y transfronterizos en euros.
 
-\subsection{El papel del EPC en la estandarización y el surgimiento de Request-to-Pay}
+\section{El papel del EPC en la estandarización y el surgimiento de Request-to-Pay}
 \label{subsec:epc-rtp}
 
-El EPC ha desempeñado un rol central en la estandarización de los instrumentos de pago SEPA. Tras la implementación de SCT y SDD, el EPC continuó explorando mejoras para la era digital, en línea con las iniciativas del Eurosistema para fomentar pagos electrónicos paneuropeos más eficientes. En noviembre de 2018, el \emph{Euro Retail Payments Board} (\textbf{ERPB}) —órgano del BCE que orienta la estrategia de pagos minoristas \cite{ECB_ERPB} — lanzó un llamado a la acción para desarrollar el concepto de \emph{Request to Pay} como nuevo servicio en la zona SEPA.  
+El EPC ha desempeñado un rol central en la estandarización de los instrumentos de pago SEPA. Tras la implementación de SCT y SDD, el EPC continuó explorando mejoras para la era digital, en línea con las iniciativas del Eurosistema para fomentar pagos electrónicos paneuropeos más eficientes. En noviembre de 2018, el \emph{Euro Retail Payments Board} (\textbf{ERPB}) (órgano del BCE que orienta la estrategia de pagos minoristas \cite{ECB_ERPB}) lanzó un llamado a la acción para desarrollar el concepto de \emph{Request to Pay} como nuevo servicio en la zona SEPA.  
 
 Atendiendo esta petición, el EPC creó un grupo de trabajo y comenzó a diseñar un esquema formal de Request to Pay durante 2019–2020. Tras una consulta pública, en noviembre de 2020 se publicó el primer \emph{SRTP Scheme Rulebook} (versión 1.0) y se abrió el registro de participantes. El esquema SRTP entró en vigor el \textit{15 de junio de 2021}, marcando un hito en la evolución de SEPA más allá de los instrumentos tradicionales. Al igual que SCT~Inst, la adhesión al esquema RTP es voluntaria; sin embargo, su desarrollo cuenta con fuerte apoyo institucional al considerarse un potenciador de los pagos instantáneos y digitales en Europa. El EPC continúa gestionando y actualizando el esquema (versión 4.0 en 2025), con la expectativa de que Request-to-Pay se integre gradualmente como componente clave del panorama de pagos europeos.
 
-\subsection{Funcionamiento técnico de SEPA Request-to-Pay (SRTP)}
+\section{Funcionamiento técnico de SEPA Request-to-Pay (SRTP)}
 \label{subsec:funcionamiento-srtp}
 
 \textbf{RTP} es un servicio de mensajería financiera que actúa como capa de solicitud previa al pago. A diferencia de los instrumentos tradicionales (transferencias o adeudos) que mueven fondos, RTP no mueve dinero por sí mismo: permite a un beneficiario (\emph{Payee}) enviar electrónicamente una solicitud de pago a un pagador (\emph{Payer}), quien puede aceptarla o rechazarla antes de iniciarse la transacción monetaria. El servicio funciona \emph{24 × 7} y añade al flujo de pago un intercambio estructurado de datos (importe, concepto, vencimiento, identidad de las partes, etc.) previo al envío de fondos.  
@@ -160,13 +160,13 @@ El flujo básico de un intercambio RTP se encuentra en la figura \ref{fig:Flujo}
 
 Hay algunos detalles acerca del esquema que conviene aclarar:
 \begin{enumerate}
-  \item \textbf{Rechazo de un SRTP o una Solicitud de Cancelación (Reject)} \\
+  \item \textbf{Rechazo de un SRTP o una solicitud de cancelación (reject)} \\
         Un \textit{reject} se produce cuando un SRTP o una Solicitud de Cancelación no es aceptada antes de ser enviada al siguiente participante en la cadena de pago. El mensaje de rechazo sigue la misma ruta que el SRTP original sin modificar ningún dato, y se incluye un registro con los detalles necesarios para asegurar un rastro de auditoría. Además, el mensaje de rechazo lleva un código de motivo que explica la razón del rechazo. La identificación del SRTP original se hace mediante la referencia única incluida por el proveedor de servicios del receptor. Los rechazos se envían de manera instantánea por el proveedor de servicios SRTP que no puede procesar la solicitud, y estos rechazos pueden ser generados automáticamente en función de comprobaciones técnicas o comerciales, sin intervención del pagador.
 
   \item \textbf{Respuestas a un SRTP (positiva o negativa)} \\
         Cuando un pagador responde a un SRTP, puede aceptar (respuesta positiva) o rechazarlo (respuesta negativa). En ambos casos, el mensaje sigue la misma ruta que el SRTP original, sin alterar los datos, y se envía instantáneamente entre los proveedores de servicios SRTP. Las respuestas negativas incluyen un código de motivo que especifica la razón del rechazo, mientras que las respuestas positivas simplemente confirman la aceptación de la solicitud. Como en el caso de los rechazos, se mantiene un registro detallado de los datos relevantes para asegurar la trazabilidad del proceso y la transparencia en la comunicación entre los proveedores de servicios.
 
-  \item \textbf{Solicitud de Cancelación del SRTP} \\
+  \item \textbf{Solicitud de cancelación del SRTP} \\
         Una “Request for cancelation” RfC puede ser iniciada por el y se transmite al pagador a través de los proveedores de servicios SRTP. La solicitud sigue la misma ruta que el SRTP original, sin modificar los datos, y debe incluir un código de motivo que justifique la cancelación. Esta solicitud puede realizarse hasta la fecha de expiración del SRTP, a menos que ya haya sido rechazado, cancelado o expirado. El proveedor de servicios SRTP del pagador verifica la validez de la solicitud antes de reenviarla, y si no se puede procesar, envía una respuesta negativa. Si la cancelación se ejecuta correctamente, el proveedor del pagador envía una respuesta positiva de manera instantánea, manteniendo siempre un registro para garantizar la trazabilidad del proceso.
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,7 +175,7 @@ Hay algunos detalles acerca del esquema que conviene aclarar:
 El \textbf{SRTP} se concibió como un servicio versátil, capaz de cubrir desde pagos cotidianos de bajo valor hasta cobros empresariales complejos. No obstante, el caso de uso considerado más transformador y sobre el que se centra este TFG es la sustitución del SDD. Aun así, existen otros escenarios relevantes que merece la pena describir para contextualizar el alcance potencial de SRTP.
 
 \begin{enumerate}
-    \item \textbf{Punto de Venta Físico}
+    \item \textbf{Punto de venta físico}
     \begin{itemize}
         \item \textbf{Descripción:} este caso de uso de RTP se emplea en tiendas físicas, donde el beneficiario (el comercio) envía una solicitud de pago al pagador (el cliente) utilizando un código QR o una tecnología \textit{Near Field Communication(NFC)}. Al escanear el código QR con su móvil o usar NFC en la terminal de pago, el cliente es redirigido a su aplicación bancaria para autorizar el pago de manera inmediata.
         \item \textbf{Proceso de identificación:}
@@ -279,27 +279,22 @@ El \textbf{SRTP} se concibió como un servicio versátil, capaz de cubrir desde 
 \end{enumerate}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{RTP dentro del ecosistema de pagos: arquitectura en capas}
+\section{RTP dentro del ecosistema de pagos: arquitectura en capas}
 \label{subsec:cubo-pagos}
 
 El ecosistema de pagos SEPA se puede describir mediante capas jerárquicas, desde los usuarios finales hasta las infraestructuras financieras que ejecutan las transacciones. A continuación se detallan las principales capas del modelo actual de pagos SEPA presente en la figura \ref{fig:Esquema por capas}:
 
-\begin{description}
+\begin{description}[itemsep=15pt, parsep=0pt]
   \item[\textbf{Capa de usuarios finales.}] 
     En la capa más alta se encuentran el \emph{pagador} y el \emph{beneficiario}. Son quienes inician y reciben los pagos, respectivamente, ya sea personas o empresas involucradas en una transacción.
-
   \item[\textbf{Capa de iniciación o interacción.}] 
     Es donde se produce la solicitud o autorización del pago a través de algún canal o interfaz. Por ejemplo, en pagos SEPA tradicionales el pagador suele autorizar una transferencia mediante la banca online o una aplicación móvil. En entornos de comercio electrónico o físico, esta capa correspondería al proceso de \emph{checkout} (por ejemplo, introduciendo datos en una pasarela de pago online o mediante un TPV/POS en tienda).
-
   \item[\textbf{Capa de proveedores de servicios de pago (PSP).}] 
     Aquí actúan las entidades financieras o PSP de cada parte. Típicamente, el banco del pagador y el banco del beneficiario son quienes ofrecen las cuentas bancarias y servicios de pago a sus clientes. Estas entidades facilitan la emisión y recepción de órdenes de pago en nombre de los usuarios finales.
-
-  \item[\textbf{Capa de esquemas de pago.}] 
+  \item[\textbf{Capa de esquemas de pago SP.}] 
     Es el conjunto de reglas y estándares comunes que permiten la interoperabilidad entre todos los PSP. En SEPA, por ejemplo, existen los esquemas de transferencia crediticia SCT o SCT Inst y adeudo directo SDD, definidos por el EPC (explicados anteriormente). Cada esquema asegura que, independientemente del banco involucrado, un pago en euros siga las mismas normas y formatos. Un esquema de pago no es el movimiento del dinero en sí, sino el conjunto de reglas, mensajes e infraestructura técnica que orquesta cómo se inician y gestionan esos pagos.
-
   \item[\textbf{Capa de infraestructuras de compensación.}] 
     Son las plataformas interbancarias que procesan las transacciones según las reglas del esquema. Estas infraestructuras se encargan de intercambiar las órdenes de pago entre el banco emisor y el banco receptor, aplicando compensación multilateral si procede.
-
   \item[\textbf{Capa de liquidación.}] 
     Es la capa más baja, donde se realiza la liquidación final de fondos entre bancos. Normalmente ocurre en los bancos centrales u organismos de compensación: por ejemplo, las obligaciones netas resultantes de muchas transacciones SEPA pueden liquidarse en TARGET2 (sistema del Banco Central Europeo). En pagos inmediatos, la liquidación suele ser casi en tiempo real (por ejemplo, mediante TIPS \cite{ECB_TIPS} que liquida cada operación al momento en cuentas del banco central).
 \end{description}
@@ -316,7 +311,7 @@ Esta arquitectura por capas garantiza que un pago iniciado por un usuario en un 
 RTP es un nuevo servicio incorporado en la arquitectura SEPA que se sitúa principalmente en la capa de esquema de pago, actuando como una capa adicional de mensajería sobre los instrumentos de pago existentes.
 
 %----------------------------------------------------------------------
-\subsubsection*{Ejemplo comparado: pago con tarjeta vs.\ RTP}
+\subsection*{Ejemplo comparado: pago con tarjeta vs.\ RTP}
 
 Como muestra el esquema comparativo de la figura \ref{fig:Esquema por capas comparación} los pagos con tarjeta (ej.\ Visa/Mastercard) históricamente han operado con una arquitectura de funciones similar a la de SEPA, pero con diferencias en los actores y procesos de cada capa:
 

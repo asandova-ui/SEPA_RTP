@@ -1,4 +1,4 @@
-\section{Validacion}
+\chapter{Validacion}
 \label{sec:validacion}
 
 
@@ -7,7 +7,7 @@
 El objetivo de esta fase es demostrar, mediante evidencias reproducibles, que el prototipo desarrollado cumple con los requisitos funcionales \textbf{RF-01} a \textbf{RF-06} y los no funcionales \textbf{RNF-01} a \textbf{RNF-03}, definidos en el Capítulo 3, así como con las reglas establecidas en el \textit{SRTP Scheme Rulebook v4.0}. Para lograr esto, se diseñó una estrategia de validación escalonada que combina pruebas manuales exploratorias, una batería de pruebas automatizadas ejecutadas con Postman, y la inspección de \textit{logs} hashados que garantizan la trazabilidad del ciclo de vida de cada solicitud RTP. En esta sección se describe en detalle la metodología empleada, el entorno de pruebas, los escenarios cubiertos y los resultados obtenidos.
 
 % Detallando el entorno de pruebas
-\subsection{Entorno de pruebas}
+\section{Entorno de pruebas}
 
 El entorno de pruebas se configuró utilizando las siguientes herramientas y configuraciones:
 
@@ -20,7 +20,7 @@ El entorno de pruebas se configuró utilizando las siguientes herramientas y con
 \end{itemize}
 
 % Describiendo la metodología de pruebas
-\subsection{Metodología}
+\section{Metodología}
 
 La metodología de validación se estructuró en tres etapas principales:
 
@@ -33,7 +33,7 @@ La metodología de validación se estructuró en tres etapas principales:
 \end{enumerate}
 
 % Presentando el flujo nominal (happy path)
-\subsection{Flujo \textit{happy path}}
+\section{Flujo \textit{happy path}}
 
 El flujo nominal, también conocido como \textit{happy path}, fue validado mediante la colección Postman, siguiendo los pasos descritos a continuación. Las capturas asociadas a cada paso se enumeran entre paréntesis.
 
@@ -55,7 +55,7 @@ En cada una de estas fases, se comprobaron los siguientes aspectos:
 \end{itemize}
 
 % Analizando los escenarios de error
-\subsection{Escenarios de error}
+\section{Escenarios de error}
 
 Para verificar la resiliencia del sistema frente a situaciones adversas, se diseñaron y probaron tres escenarios de error comunes, todos ellos incorporados a la colección Postman para garantizar la regresión continua:
 
@@ -68,7 +68,7 @@ Para verificar la resiliencia del sistema frente a situaciones adversas, se dise
 \end{description}
 
 % Resumiendo las conclusiones de la validación
-\subsection{Conclusiones}
+\section{Conclusiones}
 
 La estrategia de validación adoptada ha demostrado que:
 

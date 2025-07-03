@@ -1,8 +1,8 @@
-\section{Diseño e Implementación}
+\chapter{Diseño e Implementación}
 \label{sec:DisenoImplementacion}
 Para implementar un sistema completo de \textit{Request To Pay}, se ha desarrollado un servidor HTTP que expone una API RESTful y un cliente web en tiempo real. El objetivo de este apartado es detallar cómo se ha llevado a cabo esta implementación, así como las fases de desarrollo involucradas.
 
-\subsection{Fundamentos Teóricos}
+\section{Fundamentos Teóricos}
 Antes de profundizar en la implementación, es fundamental aclarar los dos pilares teóricos en los que se basa el sistema:
 
 \begin{itemize}
@@ -32,7 +32,7 @@ Antes de profundizar en la implementación, es fundamental aclarar los dos pilar
 
 En conjunto, el servidor HTTP actúa como el camino por donde viajan las solicitudes, mientras que la API RESTful establece las reglas claras y fáciles de mantener para que ese camino conecte eficientemente la lógica del servidor con los diversos clientes que dependen de ella.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Tecnologías utilizadas}
+\section{Tecnologías utilizadas}
 \label{subsec:Herramientas de desarrollo}
 El desarrollo del proyecto se ha llevado a cabo en un entorno virtual Python que aísla las dependencias y permite reproducir la instalación mediante el comando \texttt{pip install -r requirements.txt}. Este enfoque asegura consistencia y portabilidad, facilitando tanto la colaboración entre desarrolladores como el despliegue en entornos diversos.
 
@@ -48,7 +48,7 @@ El desarrollo del proyecto se ha llevado a cabo en un entorno virtual Python que
 
 El uso de un entorno virtual junto con dependencias consolidadas establece una base robusta para el despliegue de la aplicación en entornos más exigentes, como contenedores, nubes públicas o servidores locales, preservando la integridad de su arquitectura fundamental.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Estructura y funcionamiento}
+\section{Estructura y funcionamiento}
 \label{subsec:Estructura}
 El código del proyecto se estructura en dos componentes principales, \textbf{backend} y \textbf{frontend}, interconectados mediante los protocolos HTTP y WebSockets. Esta división, diseñada de manera intencionada, responde a la necesidad de lograr un desarrollo ordenado, eficiente y preparado para futuros crecimientos, considerando que trabajé en el proyecto de forma individual. Al separar el \textit{backend}, encargado de la lógica de negocio, el manejo de datos y la comunicación con el cliente, del \textit{frontend}, centrado en la interfaz de usuario y la experiencia interactiva, se obtiene una arquitectura clara y modular. Esta organización aporta múltiples ventajas: mejora la mantenibilidad al permitir identificar y corregir errores de manera localizada, simplifica la incorporación de nuevas funcionalidades sin alterar otras partes del sistema y refleja fielmente la arquitectura empleada en entornos de producción reales, lo que facilita una transición fluida hacia despliegues en contenedores, nubes públicas o servidores locales. Además, esta separación promueve la reutilización de código, ya que el \textit{backend} puede servir a múltiples clientes (como aplicaciones móviles o de escritorio) y el \textit{frontend} puede adaptarse a diferentes dispositivos sin modificar la lógica subyacente. A continuación, se describen los archivos que componen cada una de estas partes, su rol específico en el proyecto y el fragmento de código más relevante.
 
@@ -59,7 +59,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
   \label{fig:Tree}
 \end{figure}
 
-\subsubsection{Backend}
+\subsection{Backend}
 \label{subsubsec:Backend}
 
 \begin{itemize}
@@ -332,7 +332,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
         Cuando el proyecto crezca y se necesite manejar más usuarios al mismo tiempo, hacer copias de seguridad mientras está funcionando o tener varias copias de la base de datos, se puede cambiar a una base de datos más potente, como PostgreSQL o MySQL. Esto se hace simplemente cambiando una dirección de conexión, sin modificar casi nada del programa.
 \end{itemize}
 
-\subsubsection{Frontend}
+\subsection{Frontend}
 \label{subsubsec:Frontend}
 
 \begin{itemize}
@@ -383,7 +383,7 @@ El código del proyecto se estructura en dos componentes principales, \textbf{ba
     \item \textbf{styles.css} es consumido por todas las páginas del frontend (por ejemplo, index.html y los fragmentos dinámicos como RTP.html) y su única misión es dotar de coherencia visual a la aplicación: define la paleta de colores (degradados morados y dorados), las tipografías (Montserrat y Great Vibes), los espaciados y sombras de los componentes (cards, inputs, botones), y aplica transiciones suaves (hover, fade-in) para mejorar la percepción de interactividad sin añadir ninguna lógica de negocio. 
 \end{itemize}
 
-\subsection{Emulación del prototipo \textit{Request To Pay}}
+\section{Emulación del prototipo \textit{Request To Pay}}
 \label{subsec:EmulacionRTP}
 Para emular el flujo Request To Pay, se han configurado cuatro actores con roles y permisos claramente diferenciados: el beneficiario, el pagador y los PSP correspondientes a cada uno de ellos. Cada actor dispone de un conjunto específico de endpoints REST para ejecutar sus operaciones (crear, validar, enrutar y decidir sobre una petición RTP) y escucha eventos WebSocket que garantizan la notificación en tiempo real de cada cambio de estado. De esta manera, el sistema reproduce fielmente el ciclo completo de una solicitud de cobro, desde su emisión por parte del beneficiario hasta la decisión final del pagador, manteniendo la trazabilidad y la coherencia de los estados en el backend y el frontend.
 
@@ -841,7 +841,7 @@ Me centraré en explicar principalmente el backend, ya que el frontend es una p�
         partes quedan notificadas del desenlace.
 \end{itemize}
 
-\subsection{Pruebas y validación}
+\section{Pruebas y validación}
 \label{subsubsec:PruebasValidacion}
 Para las pruebas en \emph{Postman} lo primero fue definir la variable de entorno
 \texttt{baseURL}, que almacena la dirección raíz del servidor

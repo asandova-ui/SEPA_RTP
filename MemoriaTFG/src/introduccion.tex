@@ -1,24 +1,24 @@
-\section{Introducción}
+\chapter{Introducción}
 \label{sec:Introduccion}
 
 Para comprender el entorno actual de los pagos en Europa, conviene arrancar por la \emph{Single Euro Payments Area} (SEPA): un espacio comunitario en el que todos los pagos en euros se rigen por los mismos estándares técnicos y normas operativas, de modo que enviar dinero de un país a otro resulta tan ágil y claro como una transferencia nacional\cite{ecb_sepa}. SEPA estableció protocolos de mensajería comunes, armonizó los plazos de liquidación y fijó reglas uniformes de protección al usuario, creando la base sobre la que se despliegan hoy los servicios de pago más innovadores.
 
-En los últimos diez años, la digitalización de los servicios financieros ha cambiado por completo cómo particulares y empresas gestionan sus transacciones dentro de ese marco SEPA. Las transferencias instantáneas, las API abiertas de los bancos y el auge del comercio electrónico han disparado la demanda de procesos de cobro que sean sencillos, transparentes y en tiempo real. No obstante, los instrumentos de pago tradicionales —tarjetas, transferencias convencionales o domiciliaciones— nacieron en un contexto muy distinto y todavía arrastran limitaciones que penalizan tanto la experiencia de usuario como la eficiencia operativa.
+En los últimos diez años, la digitalización de los servicios financieros ha cambiado por completo cómo particulares y empresas gestionan sus transacciones dentro de ese marco SEPA. Las transferencias instantáneas, las API abiertas de los bancos y el auge del comercio electrónico han disparado la demanda de procesos de cobro que sean sencillos, transparentes y en tiempo real. No obstante, los instrumentos de pago tradicionales (tarjetas, transferencias convencionales o domiciliaciones) nacieron en un contexto muy distinto y todavía arrastran limitaciones que penalizan tanto la experiencia de usuario como la eficiencia operativa.
 
-Aquí es donde entra en juego \emph{Request-to-Pay} (RTP). Este servicio de mensajería permite al beneficiario enviar al pagador una solicitud de pago digital estructurada, con todos los detalles (importe, concepto, vencimiento), y recibir en segundos una respuesta —aceptación, rechazo o aplazamiento— antes de iniciar el movimiento de fondos. RTP no sustituye los métodos de pago existentes, sino que actúa como una capa de orquestación sobre la infraestructura SEPA (y, en especial, los pagos inmediatos) y los canales de banca online, facilitando la conciliación, reduciendo la fricción en el cobro y modernizando la experiencia tanto para empresas como para consumidores.
+Aquí es donde entra en juego \emph{Request-to-Pay} (RTP). Este servicio de mensajería permite al beneficiario enviar al pagador una solicitud de pago digital estructurada, con todos los detalles (importe, concepto, vencimiento), y recibir en segundos una respuesta (aceptación, rechazo o aplazamiento) antes de iniciar el movimiento de fondos. RTP no sustituye los métodos de pago existentes, sino que actúa como una capa de orquestación sobre la infraestructura SEPA (y, en especial, los pagos inmediatos) y los canales de banca online, facilitando la conciliación, reduciendo la fricción en el cobro y modernizando la experiencia tanto para empresas como para consumidores.
 
-\subsection{Motivación}
+\section{Motivación}
 \label{subsec:Motivacion}
 
-La domiciliación bancaria, regulada por el esquema \textit{SEPA Direct Debit} (\textbf{SDD})\cite{epc_sdd_2025} (instrumento paneuropeo de cargo en cuenta regulado por el \emph{European Payments Council} (EPC)) desde 2014, sigue siendo el método principal para cobros recurrentes en España. No obstante, su estructura, pensada para un entorno de procesos \emph{offline}—genera hoy inconvenientes que chocan con las demandas de inmediatez, seguridad y experiencia de usuario fluida que caracterizan la economía digital actual. Así se detectan una serie de ineficiencias, que se describen en la sección \ref{subsec:ineficiencias}, y una oportunidad de introducir un nuevo método de pago que solvente dichas ineficiencias, el cual se presenta en la sección \ref{subsec:oportunidadRTP}.
+La domiciliación bancaria, regulada por el esquema \textit{SEPA Direct Debit} (\textbf{SDD})\cite{epc_sdd_2025} (instrumento paneuropeo de cargo en cuenta regulado por el \emph{European Payments Council} (EPC)) desde 2014, sigue siendo el método principal para cobros recurrentes en España. No obstante, su estructura, pensada para un entorno de procesos \emph{offline} genera hoy inconvenientes que chocan con las demandas de inmediatez, seguridad y experiencia de usuario fluida que caracterizan la economía digital actual. Así se detectan una serie de ineficiencias, que se describen en la sección \ref{subsec:ineficiencias}, y una oportunidad de introducir un nuevo método de pago que solvente dichas ineficiencias, el cual se presenta en la sección \ref{subsec:oportunidadRTP}.
 
-\subsubsection{Ineficiencias operativas detectadas}
+\subsection{Ineficiencias operativas detectadas}
 \label{subsec:ineficiencias}
 
 Tras analizar la operativa SDD nacional se han identificado una serie de ineficiencias que afectan tanto a los usuarios como a las entidades participantes en el proceso de pago resumidas en los siguientes \textbf{5} puntos:
 \begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=0.75cm]
       \item \textbf{Modelo offline y necesidad de mandato físico}\\
-            El proceso de pago mediante el esquema SDD opera bajo un modelo offline, lo que implica una ausencia total de interacción en tiempo real entre las partes involucradas. Para iniciar el cobro, el deudor debe firmar y enviar un \textbf{mandato SEPA} en formato físico. Este mandato es un documento mediante el cual el deudor autoriza al acreedor a realizar cobros automáticos a través de la domiciliación bancaria. El documento debe ser conservado por el acreedor durante toda la duración del contrato y hasta 14 meses después de la última transacción realizada. Aunque la digitalización ha avanzado en muchos ámbitos, aún no existe un estándar único y interoperable para los \textbf{eMandates}, que son la versión electrónica de los mandatos SEPA que permitem autorizar cobros de manera digital, lo que lleva a que cada entidad bancaria implemente su propio sistema. Esta falta de uniformidad genera inconsistencias y dificulta la estandarización del proceso.\\
+            El proceso de pago mediante el esquema SDD opera bajo un modelo offline, lo que implica una ausencia total de interacción en tiempo real entre las partes involucradas. Para iniciar el cobro, el deudor debe firmar y enviar un \textbf{mandato SEPA} en formato físico. Este mandato es un documento mediante el cual el deudor autoriza al acreedor a realizar cobros automáticos a través de la domiciliación bancaria. El documento debe ser conservado por el acreedor durante toda la duración del contrato y hasta 14 meses después de la última transacción realizada. Aunque la digitalización ha avanzado en muchos ámbitos, aún no existe un estándar único y interoperable para los \textit{\textbf{eMandates}}, que son la versión electrónica de los mandatos SEPA que permitem autorizar cobros de manera digital, lo que lleva a que cada entidad bancaria implemente su propio sistema. Esta falta de uniformidad genera inconsistencias y dificulta la estandarización del proceso.\\
             \textbf{Consecuencias}:
       \begin{itemize}
             \item Fricciones significativas en los procesos de venta digital, ya que los usuarios deben completar pasos adicionales que rompen con la inmediatez esperada en el comercio electrónico actual.
@@ -27,7 +27,7 @@ Tras analizar la operativa SDD nacional se han identificado una serie de inefici
       \end{itemize}
 
   \item \textbf{Derecho a devolución prolongado}\\
-        El esquema SDD otorga al deudor un derecho a devolución excepcionalmente amplio, lo que genera incertidumbre en la gestión de los ingresos por parte de los acreedores. En el caso de un \emph{cobro autorizado}, el deudor puede solicitar la devolución del importe sin necesidad de justificar su decisión durante un periodo de \textbf{ocho semanas}, bajo la política conocida como \emph{“no-questions-asked”}. Por otro lado, si el cobro se clasifica como \emph{no autorizado} —por ejemplo, si el banco emisor no puede probar la existencia de un mandato válido—, el plazo para reclamar se extiende hasta \textbf{trece meses}.
+        El esquema SDD otorga al deudor un derecho a devolución excepcionalmente amplio, lo que genera incertidumbre en la gestión de los ingresos por parte de los acreedores. En el caso de un \emph{cobro autorizado}, el deudor puede solicitar la devolución del importe sin necesidad de justificar su decisión durante un periodo de \textbf{ocho semanas}, bajo la política conocida como \emph{“no-questions-asked”}. Por otro lado, si el cobro se clasifica como \emph{no autorizado} (por ejemplo, si el banco emisor no puede probar la existencia de un mandato válido), el plazo para reclamar se extiende hasta \textbf{trece meses}.
         
         \textbf{Consecuencias}:
         \begin{itemize}
@@ -75,7 +75,7 @@ Tras analizar la operativa SDD nacional se han identificado una serie de inefici
   \item Un \textbf{freno al desarrollo de la economía digital}, puesto que el SDD no está diseñado para ofrecer experiencias de pago instantáneas y fluidas, como las que proporcionan métodos alternativos como las tarjetas de crédito, los monederos electrónicos o plataformas como Bizum.
 \end{itemize}
 
-\subsubsection{Oportunidad de un esquema RTP}
+\subsection{Oportunidad de un esquema RTP}
 \label{subsec:oportunidadRTP}
 El estándar \textit{SEPA RTP} (\textbf{SRTP}) aborda de manera efectiva las limitaciones técnicas y operativas del SDD, ofreciendo una laternativa más ágil y adaptada al entorno digital.
 
@@ -123,7 +123,7 @@ Riesgo de fraude & Medio-Alto (devoluciones) & Bajo (\textsc{sca} + irreversibil
 \bigskip
 
 
-\subsection{Objetivos técnicos fundamentales}
+\section{Objetivos fundamentales}
 \label{subsec:Objetivos}
 El propósito de este Trabajo de Fin de Grado es \textbf{demostrar}, de forma general, \textbf{cómo el esquema SRTP puede subsanar las ineficiencias operativas del SDD} y adaptarse al contexto digital actual. Para ello \textbf{se plantea el desarrollo de un prototipo de referencia que reproduzca el ciclo completo de una petición de pago} y permita evaluar sus ventajas frente al modelo tradicional. De manera deliberada, en esta sección los objetivos se formulan en términos generales; los detalles de implementación (arquitectura, tecnologías y herramientas concretas) se presentan más adelante, en el capítulo de Diseño (\ref{sec:diseno}).
 
@@ -134,7 +134,7 @@ A continuación se recogen los objetivos principales, ordenados de lo general a 
     Validar que un flujo basado en solicitudes de pago inmediatas ofrece mayor agilidad, trazabilidad y control que la domiciliación bancaria, sin comprometer la seguridad ni la interoperabilidad dentro del ecosistema SEPA.
     
     \item \textbf{Emular de extremo a extremo el ciclo operativo de un proveedor RTP}\\
-    Construir un prototipo funcional que reproduzca los pasos esenciales de una operación SRTP ---creación, presentación, decisión, ejecución y cierre--- implicando a los actores y mensajes definidos por el \textit{rulebook} \cite{epc014}.
+    Construir un prototipo funcional que reproduzca los pasos esenciales de una operación SRTP (creación, presentación, decisión, ejecución y cierre) implicando a los actores y mensajes definidos por el \textit{rulebook} \cite{epc014}.
     
     \item \textbf{Garantizar integridad, confidencialidad y trazabilidad de las transacciones}\\
     Incorporar salvaguardas de seguridad y gobierno del dato que permitan certificar el origen de cada mensaje, registrar su histórico de estados y conservar evidencias de consentimiento digital.
@@ -154,7 +154,7 @@ A continuación se recogen los objetivos principales, ordenados de lo general a 
 
 En definitiva, este TFG busca construir una solución práctica que demuestre el potencial del SRTP para superar las trabas del SDD, usando tecnologías modernas y un enfoque riguroso. Este prototipo no solo debe cumplir con los estándares técnicos, sino que también inspire confianza en una nueva forma de gestionar pagos en Europa.
 
-\subsection{Fases y Métodos}
+\section{Fases y Métodos}
 \label{subsec:FasesMetodos}
 El TFG se ha estructurado en 3 fases principales:
 

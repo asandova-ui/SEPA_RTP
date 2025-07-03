@@ -1,7 +1,7 @@
 %--------------------------------------------------------------------
 % 4 Implementación – SEPA Request‑to‑Pay Prototype (Clase `article`)
 %--------------------------------------------------------------------
-\section{Implementación}
+\chapter{Implementación}
 \label{sec:implementacion}
 
 Este apartado traduce los principios definidos en el Diseño (Secc.~\ref{sec:diseno}) a código ejecutable. Cada subsección muestra la correspondencia entre los artefactos lógicos y su concreción en Python\,/\,JavaScript, de modo que se pueda verificar cómo se satisfacen los requisitos \textbf{RF} y \textbf{RNF} enumerados anteriormente.
@@ -9,7 +9,7 @@ Este apartado traduce los principios definidos en el Diseño (Secc.~\ref{sec:dis
 %---------------------------------------------------------------
 % 4.1 Visión general de la arquitectura y organización del código
 %---------------------------------------------------------------
-\subsection{Visión general de la arquitectura y organización del código}
+\section{Visión general de la arquitectura y organización del código}
 \label{sec:impl-vision}
 
 \noindent
@@ -17,7 +17,7 @@ La implementación del prototipo para simular un proveedor del esquema SRTP requ
 
 La arquitectura adoptada se fundamenta en principios de modularidad, escalabilidad y separación de preocupaciones, lo que permite que cada parte del sistema tenga un propósito claro y que las interacciones entre componentes sean eficientes. A continuación, se describen los elementos clave de la arquitectura general, seguidos por una explicación de la organización del código y su estructura de directorios, acompañada de ejemplos concretos que refuerzan la conexión entre el diseño y la implementación.
 
-\subsubsection{Componentes del servidor}
+\subsection{Componentes del servidor}
 \label{subsec:componentes-del.serv}
 \begin{itemize}
     \item \textbf{Capa de persistencia}: Esta capa se encarga de gestionar los datos del sistema utilizando un enfoque basado en modelos ORM (Object-Relational Mapping). Los modelos definidos aquí, como la entidad \texttt{RTP} que representa una solicitud de pago, están alineados con el diseño de la base de datos descrito en la sección \ref{subsec:diseno_datos}. La persistencia asegura que la información se almacene de forma estructurada y sea accesible para las operaciones del SRTP.
@@ -37,7 +37,7 @@ La interacción entre el cliente y el servidor es un aspecto crítico del sistem
 
 
 %---------------------------------------------------------------
-\subsubsection{Estructura de directorios}
+\subsection{Estructura de directorios}
 %---------------------------------------------------------------
 \label{sec:impl-vision-tree}
 
@@ -135,7 +135,7 @@ para el prototipo.
 Esta estructura promueve la modularidad y el aislamiento de responsabilidades. Por ejemplo, la separación entre \textbf{/models} y \textbf{/services} permite modificar la lógica de negocio sin afectar la persistencia.
 
 %----------------------------------------------------------------
-\subsubsection{Satisfacción de requisitos}
+\subsection{Satisfacción de requisitos}
 %----------------------------------------------------------------
 Este subapartado tiene como objetivo demostrar de manera detallada cómo el prototipo implementado cumple con cada uno de los \textbf{requisitos funcionales (RF)} y \textbf{no funcionales (RNF)} establecidos en el capítulo \ref{sec:diseno}. Para cada requisito, se proporciona una explicación de su propósito dentro del flujo del esquema SRTP, se referencian los fragmentos de código que materializan la solución y se indica la ruta del archivo donde se aloja dicha lógica. Los fragmentos de código se han incluido en el \emph{Índice de listados} al final de la memoria para facilitar su localización y consulta.
 
@@ -202,7 +202,7 @@ En resumen, este subapartado ha demostrado cómo cada requisito funcional y no f
 
 
 
-\subsection{Persistencia y modelos ORM}
+\section{Persistencia y modelos ORM}
 \label{subsec:orm}
 
 Este apartado detalla la capa de persistencia del prototipo, abordando dos aspectos fundamentales: (i) la \textbf{elección del motor de base de datos} que soporta el sistema y (ii) la \textbf{descripción de los tres modelos de dominio} que se persisten mediante SQLAlchemy. Estas decisiones son esenciales para garantizar la fiabilidad, portabilidad y escalabilidad del sistema, alineándose con los requisitos establecidos en el Capítulo 3.
@@ -241,7 +241,7 @@ El esquema de la base de datos consta de \textbf{tres tablas} que representan lo
 En conclusión, la capa de persistencia del prototipo utiliza SQLite por su simplicidad y portabilidad, mientras que SQLAlchemy abstrae las interacciones con la base de datos, ofreciendo flexibilidad para futuras migraciones. Los modelos \texttt{Actor}, \texttt{RTP} y \texttt{Log} cubren todas las necesidades del flujo SRTP, desde la gestión de actores hasta la auditoría de transacciones, sentando las bases para un sistema robusto y escalable.
 
 
-\subsection{Servicios de dominio}
+\section{Servicios de dominio}
 \label{subsec:servicios_dominio}
 
 % Introduciendo el propósito y la relación con el capítulo 3
@@ -251,7 +251,7 @@ El apartado 4.3 presenta la implementación de los servicios de dominio dentro d
 La implementación de esta lógica se concentra en el módulo \texttt{services.py}, ubicado en el directorio \texttt{backend/} del prototipo. Este módulo actúa como el corazón operativo del sistema, proporcionando una interfaz programática que los controladores REST (definidos en \texttt{routes.py}) y los eventos WebSocket utilizan para interactuar con la base de datos y los actores del flujo SRTP. Su diseño respeta los principios de cohesión y bajo acoplamiento descritos en el capítulo 3, permitiendo que las operaciones de negocio sean independientes de los detalles de presentación o transporte.
 
 % Estableciendo el patrón general de los servicios
-\subsection*{4.3.1 Estructura de los servicios}
+\section*{4.3.1 Estructura de los servicios}
 
 % Detallando el flujo común de los servicios
 Cada servicio de dominio sigue una estructura estandarizada que garantiza consistencia y robustez en la ejecución de las operaciones. Esta estructura incluye:
@@ -264,7 +264,7 @@ Cada servicio de dominio sigue una estructura estandarizada que garantiza consis
 \end{enumerate}
 
 % Explicando los servicios específicos implementados
-\subsection*{4.3.2 Descripción de los servicios implementados}
+\section*{4.3.2 Descripción de los servicios implementados}
 
 % Listando y describiendo cada servicio
 A continuación, se describen los servicios clave implementados en \texttt{services.py}, cada uno asociado a una etapa del flujo SRTP:
@@ -278,12 +278,12 @@ A continuación, se describen los servicios clave implementados en \texttt{servi
 \end{itemize}
 
 % Concluyendo con la relevancia y extensibilidad
-\subsection{API REST y WebSocket}
+\section{API REST y WebSocket}
 \label{subsec:api_ws}
 
 La API REST del sistema SRTP proporciona una interfaz programática que permite la interacción con las funcionalidades principales del prototipo. Esta API sigue los principios RESTful, utilizando métodos HTTP estándar para gestionar recursos como las solicitudes Request-to-Pay (RTP) y los actores del sistema. Para organizar las rutas de manera eficiente, la implementación se estructura en dos blueprints de Flask: \texttt{rtp} y \texttt{actors}, lo que mejora la modularidad y facilita el mantenimiento y la escalabilidad del código.
 
-\subsection{Blueprints y su propósito}
+\section{Blueprints y su propósito}
 
 Los blueprints son una característica de Flask que permite dividir la lógica de las rutas en módulos independientes. En este sistema, se han definido dos blueprints:
 
@@ -294,7 +294,7 @@ Los blueprints son una característica de Flask que permite dividir la lógica d
 
 Esta estructura modular permite una clara separación de responsabilidades y simplifica la extensión del sistema en el futuro.
 
-\subsection{Endpoints REST}
+\section{Endpoints REST}
 
 A continuación, se presenta una tabla con todos los endpoints REST disponibles en la API, el método HTTP, la URL y una breve descripción de su funcionalidad.
 
@@ -322,13 +322,13 @@ A continuación, se presenta una tabla con todos los endpoints REST disponibles 
 \end{table}
 
 
-\subsection{Frontend y notificaciones}
+\section{Frontend y notificaciones}
 \label{subsec:frontend}
 
 % Introduciendo el propósito del apartado
 Este apartado describe la implementación del frontend del prototipo SRTP, que proporciona una interfaz de usuario intuitiva para interactuar con las funcionalidades del sistema, y el mecanismo de notificaciones en tiempo real que mantiene informados a los actores. El frontend, alineado con los requisitos funcionales del Capítulo 3, permite a los usuarios (beneficiarios, PSPs y pagadores) gestionar solicitudes RTP y acceder a sus perfiles, mientras que el sistema de notificaciones asegura una comunicación ágil, como se detalla en el requisito funcional RF-05.
 
-\subsubsection*{4.7.1 \; Frontend}
+\subsection*{4.7.1 \; Frontend}
 
 % Describiendo la estructura y tecnologías del frontend
 El frontend está implementado como una aplicación web de página única (SPA-like) que utiliza tecnologías modernas para ofrecer una experiencia de usuario fluida. La interfaz se basa en los siguientes componentes tecnológicos:
@@ -348,7 +348,7 @@ La sección de Request-to-Pay, definida en \texttt{RTP.html} y cargada dinámica
 % Describiendo la experiencia de usuario
 La experiencia de usuario se optimiza mediante un menú inferior (\texttt{bottomMenuSquares}) con iconos y animaciones hover, y una barra de navegación que permite alternar entre secciones. Aunque las secciones de cuentas y tarjetas son placeholders, la sección de perfil permite actualizar datos como IBAN y saldo, integrándose con el endpoint \texttt{/profile}. Esta estructura modular asegura que el frontend sea extensible para futuras funcionalidades, como se propone en el capítulo \ref{sec:Potencial}.
 
-\subsubsection*{4.7.2 \; Notificaciones}
+\subsection*{4.7.2 \; Notificaciones}
 
 % Breve descripción de las notificaciones
 El sistema de notificaciones en tiempo real, implementado con Flask-SocketIO y descrito parcialmente en los apartados 4.1 y 4.3, utiliza WebSockets para informar a los actores sobre cambios en el estado de las solicitudes RTP, cumpliendo con RF-05. En el frontend, \texttt{RTP.js} registra listeners para eventos como \texttt{rtp\_created}, \texttt{rtp\_routed}, \texttt{rtp\_validated\_payer} y \texttt{rtp\_decision}. Estos eventos actualizan una tabla de notificaciones (\texttt{notificationsTable} en \texttt{RTP.html}) que muestra el ID, monto, estado y acciones disponibles según el rol del usuario, como validar o decidir sobre una RTP. La función \texttt{renderNotificationsTable} gestiona la visualización dinámica, asegurando una interacción reactiva y eficiente.
@@ -356,12 +356,12 @@ El sistema de notificaciones en tiempo real, implementado con Flask-SocketIO y d
 % Conclusión del apartado
 En resumen, el frontend del prototipo SRTP ofrece una interfaz funcional y adaptable que satisface las necesidades de los actores, mientras que el sistema de notificaciones proporciona actualizaciones en tiempo real. La combinación de tecnologías modernas y un diseño basado en roles garantiza una experiencia de usuario coherente con los objetivos establecidos en el Capítulo 3.
 
-\subsection{Despliegue y configuración}
+\section{Despliegue y configuración}
 \label{subsec:despliegue}
 
 Este apartado detalla el proceso de despliegue y configuración del prototipo SRTP, abarcando desde la preparación del entorno hasta la ejecución de la aplicación. El sistema está diseñado para operar en un entorno de desarrollo controlado, utilizando tecnologías ligeras y portables que cumplen con el requisito no funcional RNF-03 (portabilidad). La configuración se centraliza en archivos específicos, y el despliegue se realiza sobre un entorno virtual Python en Ubuntu 22.04.6 LTS ejecutado como WSL (Windows Subsystem for Linux) en Windows, garantizando reproducibilidad y facilidad de instalación.
 
-\subsubsection*{4.8.1 \; Preparación del entorno}
+\subsection*{4.8.1 \; Preparación del entorno}
 
 % Describiendo el sistema operativo y el entorno virtual
 El prototipo se despliega en \textbf{Ubuntu 22.04.6 LTS} bajo WSL, una elección que combina la flexibilidad de un sistema Linux con la compatibilidad de Windows. Para aislar las dependencias y evitar conflictos, se utiliza un entorno virtual Python (\texttt{venv}). Los pasos iniciales para preparar el entorno son:
@@ -382,7 +382,7 @@ El prototipo se despliega en \textbf{Ubuntu 22.04.6 LTS} bajo WSL, una elección
 % Mencionando la base de datos y sockets
 La base de datos SQLite (\texttt{rtp.db}) se genera automáticamente al iniciar la aplicación, como se describe en el apartado 4.2. No requiere configuración adicional, ya que su URI se define en \texttt{config.py}. Los sockets, gestionados por Flask-SocketIO, se inicializan en \texttt{ext\_socketio.py} (Listado~\ref{lst:14}) y se configuran para permitir conexiones desde cualquier origen (\texttt{cors\_allowed\_origins="*"}).
 
-\subsubsection*{4.8.2 \; Configuración del sistema}
+\subsection*{4.8.2 \; Configuración del sistema}
 
 % Explicando los archivos de configuración
 La configuración del prototipo se centraliza en el archivo \texttt{config.py} (Listado~\ref{lst:19}), que define parámetros clave:
@@ -405,7 +405,7 @@ El archivo \texttt{app.py} (Listado~\ref{lst:21}) es el punto de entrada de la a
 % Explicando el puerto de escucha
 El puerto de escucha se establece en \texttt{app.py} mediante la ejecución de \texttt{socketio.run(app, debug=True)}, que por defecto utiliza el puerto 5000. Este puerto es accesible localmente en \texttt{http://127.0.0.1:5000}. Para modificar el puerto, se puede pasar el parámetro \texttt{port} a \texttt{socketio.run}, por ejemplo, \texttt{socketio.run(app, port=8080, debug=True)}. Además, \texttt{app.py} abre automáticamente un navegador web en la URL raíz al iniciar la aplicación, facilitando las pruebas.
 
-\subsubsection{Ejecución del sistema}
+\subsection{Ejecución del sistema}
 
 % Describiendo el proceso de ejecución
 Para ejecutar el prototipo, se siguen estos pasos desde el directorio raíz del proyecto:
@@ -418,7 +418,7 @@ Para ejecutar el prototipo, se siguen estos pasos desde el directorio raíz del 
 % Mencionando el soporte para pruebas
 El modo de depuración (\texttt{debug=True}) permite recargar automáticamente el servidor ante cambios en el código, ideal para el desarrollo. Para un entorno de producción, se recomienda usar un servidor WSGI como \texttt{gunicorn} y desactivar el modo de depuración, como se sugiere en el Capítulo 6.
 
-\subsubsection{Conclusión}
+\subsection{Conclusión}
 
 % Resumiendo la configuración y su alineación con los requisitos
 El despliegue del prototipo SRTP es sencillo y portable gracias al uso de un entorno virtual Python, SQLite y Flask-SocketIO. La configuración centralizada en \texttt{config.py} y la inicialización automatizada en \texttt{app.py} garantizan un arranque consistente, mientras que el uso de Ubuntu WSL proporciona un entorno de desarrollo robusto. Esta implementación cumple con los requisitos de portabilidad y trazabilidad establecidos en el Capítulo 3, sentando las bases para un sistema escalable y mantenible.
