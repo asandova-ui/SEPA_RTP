@@ -110,26 +110,34 @@ def get_actor_info(actor_id):
 
 @rtp_blueprint.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
-    if not username or not password:
-        return jsonify({"error": "Faltan credenciales"}), 400
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "No JSON data provided"}), 400
+            
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        
+        if not username or not password:
+            return jsonify({"error": "Username and password are required"}), 400
+        
+        actor = Actor.query.filter_by(username=username).first()
+        if not actor:
+            return jsonify({"error": "Invalid username or password"}), 401
+        
+        if not actor.check_password(password):
+            return jsonify({"error": "Invalid username or password"}), 401
+        
+        # Successful login
+        return jsonify({
+            "message": "Login successful",
+            "actor_id": actor.id,
+            "role": actor.role,
+            "name": actor.name
+        })
     
-    actor = Actor.query.filter_by(username=username).first()
-    if not actor:
-        return jsonify({"error": "Usuario no existe"}), 404
-    
-    if actor.password != password:
-        return jsonify({"error": "Contraseña incorrecta"}), 401
-    
-    # Login exitoso
-    return jsonify({
-        "message": "Login correcto",
-        "actor_id": actor.id,
-        "role": actor.role,
-        "name": actor.name
-    })
+    except Exception as e:
+        return jsonify({"error": "Internal server error"}), 500
 
 @rtp_blueprint.route('/profile/<int:actor_id>', methods=['GET'])
 def get_profile(actor_id):

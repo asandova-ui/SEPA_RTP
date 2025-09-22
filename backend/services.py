@@ -1,55 +1,86 @@
 from models import db, RTP, Actor
-from utils import cambiar_estado_rtp, rechazar_rtp, validar_iban
+from utils import cambiar_estado_rtp, rechazar_rtp, validar_iban, sanitize_input, validate_amount
 from ext_socketio import socketio, emit
+from typing import Dict, Any, Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def crear_rtp_service(data):
-    beneficiary_id = data.get('actor_id')
-    payer_iban = data.get('payer_iban')
-    amount = data.get('amount')
+def crear_rtp_service(data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Create a new RTP with improved validation.
+    
+    Args:
+        data: Request data containing actor_id, payer_iban, amount
+        
+    Returns:
+        Dict with result or error message
+    """
+    try:
+        beneficiary_id = data.get('actor_id')
+        payer_iban = sanitize_input(data.get('payer_iban', ''), 34)
+        amount = validate_amount(data.get('amount'))
 
-    # 1) Beneficiario
-    beneficiary = Actor.query.get(beneficiary_id)
-    if not beneficiary or beneficiary.role != 'beneficiary':
-        return {"error": "El actor no es beneficiario o no existe"}
+        # Validation
+        if not beneficiary_id:
+            return {"error": "Beneficiary ID is required"}
+        
+        if not payer_iban:
+            return {"error": "Payer IBAN is required"}
+            
+        if not validar_iban(payer_iban):
+            return {"error": "Invalid IBAN format"}
+            
+        if amount is None:
+            return {"error": "Invalid amount"}
 
-    # 2) PSP del Beneficiario
-    if not beneficiary.psp_id:
-        return {"error": "El beneficiario no tiene PSP asociado"}
-    psp_benef_id = beneficiary.psp_id
+        # 1) Verify beneficiary
+        beneficiary = Actor.query.get(beneficiary_id)
+        if not beneficiary or beneficiary.role != 'beneficiary':
+            return {"error": "Invalid beneficiary or insufficient permissions"}
 
-    # 3) Hallar el pagador por su IBAN
-    payer = Actor.query.filter_by(iban=payer_iban, role='payer').first()
-    if not payer:
-        return {"error": "No se encontró un pagador con ese IBAN"}
+        # 2) Check beneficiary has PSP
+        if not beneficiary.psp_id:
+            return {"error": "Beneficiary has no associated PSP"}
+        psp_benef_id = beneficiary.psp_id
 
-    # 4) PSP del pagador
-    if not payer.psp_id:
-        return {"error": "El pagador no tiene PSP asociado"}
-    psp_payer_id = payer.psp_id
+        # 3) Find payer by IBAN
+        payer = Actor.query.filter_by(iban=payer_iban, role='payer').first()
+        if not payer:
+            return {"error": "No payer found with this IBAN"}
 
-    # Crear el RTP
-    nuevo_rtp = RTP(
-        iban=payer_iban,
-        amount=amount,
-        beneficiary_id=beneficiary.id,
-        psp_beneficiary_id=psp_benef_id,
-        psp_payer_id=psp_payer_id,
-        payer_id=payer.id
-    )
-    db.session.add(nuevo_rtp)
-    db.session.commit()
+        # 4) Check payer has PSP
+        if not payer.psp_id:
+            return {"error": "Payer has no associated PSP"}
+        psp_payer_id = payer.psp_id
 
-    socketio.emit('rtp_created', nuevo_rtp.to_dict(), room=f'psp_beneficiary_{psp_benef_id}')
+        # Create the RTP
+        nuevo_rtp = RTP(
+            iban=payer_iban,
+            amount=amount,
+            beneficiary_id=beneficiary.id,
+            psp_beneficiary_id=psp_benef_id,
+            psp_payer_id=psp_payer_id,
+            payer_id=payer.id
+        )
+        db.session.add(nuevo_rtp)
+        db.session.commit()
 
-    return {
-        "message": "RTP creado correctamente",
-        "id": nuevo_rtp.id,
-        #"beneficiary_id": beneficiary.id,
-        #"psp_beneficiary_id": psp_benef_id,
-        #"payer_id": payer.id,
-        #"psp_payer_id": psp_payer_id
-    }
+        logger.info(f"RTP {nuevo_rtp.id} created by beneficiary {beneficiary_id}")
+
+        # Notify PSP
+        socketio.emit('rtp_created', nuevo_rtp.to_dict(), room=f'psp_beneficiary_{psp_benef_id}')
+
+        return {
+            "message": "RTP created successfully",
+            "id": nuevo_rtp.id,
+        }
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error creating RTP: {e}")
+        return {"error": "Internal server error"}
 
 def validar_beneficiario_service(rtp_id):
     rtp_obj = RTP.query.get(rtp_id)
