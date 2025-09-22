@@ -17,7 +17,6 @@ Prototipo *full stack* desarrollado para un TFG que **emula el ciclo completo de
 - backend/ # API REST y lógica de negocio
 - frontend/ # Interfaz web para simular actores RTP
 - MemoriaTFG/ # Documentación y memoria en LaTeX
-
-- 
+  
 ## 🎯 Objetivo
 Validar **SRTP** como alternativa ágil, segura y trazable al SDD, proporcionando una base flexible para futuras integraciones y escenarios de producción.
