@@ -230,7 +230,7 @@ function attachRTPEventListeners() {
           btnVal.onclick = () => doValidateBeneficiary(rtp.id);
           tdAction.appendChild(btnVal);
         }
-        if (rtp.status === 'validado-beneficiario') {
+        if (rtp.status === 'creado' || rtp.status === 'validado-beneficiario') {
           let btnRoute = document.createElement('button');
           btnRoute.className = 'btn btn-sm btn-warning';
           btnRoute.textContent = 'Enrutar';
