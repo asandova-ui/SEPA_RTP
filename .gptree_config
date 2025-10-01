@@ -1,0 +1,27 @@
+# GPTree Local Config
+version: 2
+
+# Whether to use .gitignore
+useGitIgnore: true
+# File types to include (e.g., .py,.js)
+includeFileTypes: *
+# File types to exclude when includeFileTypes is '*'
+excludeFileTypes: 
+# Output file name
+outputFile: gptree_output.txt
+# Whether to output the file locally or relative to the project directory
+outputFileLocally: true
+# Whether to copy the output to the clipboard
+copyToClipboard: false
+# Whether to use safe mode (prevent overly large files from being combined)
+safeMode: true
+# Whether to store the files chosen in the config file (--save, -s)
+storeFilesChosen: true
+# Whether to include line numbers in the output (--line-numbers, -n)
+lineNumbers: false
+# Whether to show ignored files in the directory tree
+showIgnoredInTree: false
+# Whether to show only default ignored files in the directory tree while still respecting gitignore
+showDefaultIgnoredInTree: false
+# Previously selected files (when using the -s or --save flag previously)
+previousFiles: MemoriaTFG/Codes/example.m,MemoriaTFG/src/introduccion.tex,MemoriaTFG/Imagenes/error2_1.png,MemoriaTFG/Imagenes/Cuentas.png,MemoriaTFG/Imagenes/RunResults.png,MemoriaTFG/Imagenes/CU01.svg:Zone.Identifier,MemoriaTFG/Imagenes/validarPayerResponse.png,MemoriaTFG/main.lof,MemoriaTFG/main.run.xml,MemoriaTFG/MemoriaTFG.pdf,MemoriaTFG/Imagenes/MAQUINAESTADOS.pdf:Zone.Identifier,MemoriaTFG/Imagenes/Notification.png,backend/rtp.db,backend/models.py,MemoriaTFG/Imagenes/DIAGRAMA.pdf,MemoriaTFG/src/diseño.tex,MemoriaTFG/Imagenes/DIAGRAMAaER.svg:Zone.Identifier,MemoriaTFG/Imagenes/esq2.png,MemoriaTFG/Imagenes/treeB.pdf,MemoriaTFG/main.log,backend/routes_actors.py,MemoriaTFG/Imagenes/CU02.pdf,MemoriaTFG/Imagenes/4CornerModel.pdf,MemoriaTFG/Imagenes/DiagEstado.svg,.gptree_config,MemoriaTFG/Imagenes/MAPA.png.avif,MemoriaTFG/Imagenes/Perfil.png,frontend/RTP.js,MemoriaTFG/Imagenes/crearActor.png,MemoriaTFG/src/agradecimientos.tex,backend/config.py,MemoriaTFG/Imagenes/4CornerModel.png,MemoriaTFG/main.tex,frontend/RTP.html,MemoriaTFG/main.aux,frontend/index.html,MemoriaTFG/Imagenes/DiagComp.pdf,MemoriaTFG/Imagenes/DiagComp.svg:Zone.Identifier,MemoriaTFG/Imagenes/crearRTP.png,MemoriaTFG/src/validacion.tex,MemoriaTFG/Imagenes/DIAGRAMAaER.pdf,MemoriaTFG/bibliografia.bib,MemoriaTFG/Imagenes/ER.pdf,MemoriaTFG/Imagenes/treeB.png,MemoriaTFG/Imagenes/CU02.svg,frontend/styles.css,MemoriaTFG/src/resumen.tex,frontend/app.js,backend/services.py,MemoriaTFG/Imagenes/Universidad-de-Valladolid.png,MemoriaTFG/main.bcf,MemoriaTFG/main.synctex.gz,MemoriaTFG/Imagenes/DIAGRAMAaER.svg,MemoriaTFG/Imagenes/SEPA-direct-debit-logo.png,MemoriaTFG/Imagenes/Tarjetas.png,MemoriaTFG/Imagenes/error3.png,MemoriaTFG/src/conclusiones.tex,MemoriaTFG/Imagenes/baseURL.png,MemoriaTFG/Imagenes/validarBenefResponse.png,MemoriaTFG/src/implementacion.tex,MemoriaTFG/Imagenes/DiagEstado.pdf,backend/app.py,MemoriaTFG/Imagenes/error1.png,backend/utils_roles.py,MemoriaTFG/Imagenes/DiagEstado.svg:Zone.Identifier,MemoriaTFG/Imagenes/DIAGRAMAaER.pdf:Zone.Identifier,MemoriaTFG/Imagenes/LoginForm.png,MemoriaTFG/src/metodos.tex,MemoriaTFG/Imagenes/enrutarBenef.png,MemoriaTFG/Imagenes/LayerComp.png,MemoriaTFG/Imagenes/Flujo.png,MemoriaTFG/src/implementacion_past.tex,MemoriaTFG/Imagenes/ConexionSockets.png,MemoriaTFG/Imagenes/crearRTPResponse.png,MemoriaTFG/main.lot,MemoriaTFG/Imagenes/PaisesSEPA2.avif,MemoriaTFG/main.blg,MemoriaTFG/Imagenes/MAQUINAESTADOS.svg:Zone.Identifier,MemoriaTFG/Imagenes/esq1.png,MemoriaTFG/Imagenes/DIAGRAMA.svg:Zone.Identifier,MemoriaTFG/Imagenes/validarBenef.png,MemoriaTFG/Imagenes/logoETSIT.jpeg,MemoriaTFG/Imagenes/DIAGRAMA.pdf:Zone.Identifier,MemoriaTFG/castellano2.bst,MemoriaTFG/Imagenes/ER.svg:Zone.Identifier,MemoriaTFG/Imagenes/crearActorResponse.png,MemoriaTFG/Imagenes/MAQUINAESTADOS.pdf,MemoriaTFG/Imagenes/error2_2.png,MemoriaTFG/Imagenes/decisionResponse.png,MemoriaTFG/Imagenes/CU01.pdf,MemoriaTFG/Imagenes/DiagComp.svg,MemoriaTFG/main.toc,MemoriaTFG/Imagenes/ER.svg,MemoriaTFG/src/estado_arte.tex,backend/requirements.txt,MemoriaTFG/main.out,MemoriaTFG/src/resultados.tex,backend/routes.py,MemoriaTFG/Imagenes/logs.png,MemoriaTFG/Imagenes/MAQUINAESTADOS.svg,MemoriaTFG/Imagenes/DashBoard.png,MemoriaTFG/Imagenes/MiAPITFG.png,MemoriaTFG/Imagenes/enrutarBenefResponse.png,MemoriaTFG/Imagenes/decision.png,MemoriaTFG/Imagenes/Arranque1.png,MemoriaTFG/main.fdb_latexmk,MemoriaTFG/main.fls,MemoriaTFG/Imagenes/logsResponse.png,MemoriaTFG/Imagenes/DIAGRAMA.svg,MemoriaTFG/Imagenes/validarPayer.png,backend/utils.py,MemoriaTFG/Imagenes/CU01.svg,MemoriaTFG/Imagenes/CU02.svg:Zone.Identifier,backend/ext_socketio.py,MemoriaTFG/Imagenes/PaisesSEPA.png,MemoriaTFG/src/codigos.tex,MemoriaTFG/main.lol,MemoriaTFG/main.bbl
