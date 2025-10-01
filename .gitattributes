@@ -1,0 +1,3 @@
+# Configuración para evitar atribución automática de herramientas
+* -linguist-generated
+* -linguist-documentation

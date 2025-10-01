@@ -1,2 +1,15 @@
 # Excluir todo el repositorio de GitHub Copilot
+# Este archivo previene que Copilot analice o sugiera código para este proyecto
 *
+
+# Excluir archivos específicos
+*.py
+*.js
+*.html
+*.css
+*.tex
+*.md
+*.txt
+*.json
+*.yml
+*.yaml
